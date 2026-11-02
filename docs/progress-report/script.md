@@ -16,7 +16,7 @@ Replace anything in `[brackets]` before presenting.
 | 6 | Site map | Michael | 0:40 |
 | 7 | Moodboard | Ethan | 0:35 |
 | 8 | Palette & type | Ethan | 0:35 |
-| 9 | Homepage wireframe | Michael | 0:45 |
+| 9 | Homepage wireframe + live demo | Michael | 1:05 |
 | 10 | Elements & principles | Ethan | 0:40 |
 | 11 | Our timeline | Rolf | 0:35 |
 | 12 | Challenges & next steps | Elijah | 0:35 |
@@ -90,12 +90,30 @@ text, and Caveat, a handwriting font, for the listahan notes. One palette and
 one type system across all pages gives us harmony.
 
 **9 · Homepage wireframe (Michael).** This is our first low-fidelity
-wireframe. One: the navigation bar. Two: the store sign, our main point of
-emphasis. Three: the rehas window that frames the shelves, giving line and
-rhythm. Four: the products; hovering lights one up in yellow, and clicking
-opens a story. Five: the counter, where the tindera greets you, and the
-footer with credits and sources. Next, we turn this into high-fidelity
-screens in Figma.
+wireframe of the homepage. One: the navigation bar with our four sections.
+Two: the store sign, our main point of emphasis. Three: the rehas window that
+frames the shelves, giving line and rhythm. Four: the products on the
+shelves. Let me show you this part live.
+
+*[Switch to the browser tab with `02-homepage-wireframe.html`: press Esc to
+leave Canva's Present mode, then click the browser tab.]*
+
+This is the same wireframe, already built as a real web page. When I hover
+over a product on the top shelf *[slowly move the mouse over Tingi, Utang,
+then Tambayan]*, it lifts up and turns yellow. In the final website, clicking
+a product will open its story.
+
+*[Switch back to the Canva tab, still on slide 9, and click Present again.]*
+
+Five: the counter, where the tindera greets you, and the footer with credits
+and sources. Next, we will turn this into high-fidelity screens in Figma. Now
+Ethan will show how we apply the elements and principles of design.
+
+> **Demo prep (before the presentation):** download
+> `docs/process/02-homepage-wireframe.html` from GitHub to the presenting
+> laptop, open it in the same browser as Canva, and keep it in the tab next
+> to Canva. Test the hover once. If the switch fails, skip the demo and say
+> "hovering lights a product up in yellow, and clicking opens a story."
 
 **10 · Elements & principles (Ethan).** Here is how we will apply every
 element and principle required. Line from the grill; color from sachets and
