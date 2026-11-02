@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tingi — Homepage Wireframe (v1)</title>
+<style>
+  /* Low-fidelity wireframe: grays plus the two accent colors only. */
+  :root {
+    --ink: #2B1D14;
+    --paper: #FBF5E8;
+    --box: #CDBB9C;
+    --line: #8B6B4A;
+    --red: #B8382A;
+    --yellow: #F2B705;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #EADBBE; color: var(--ink); font-family: Arial, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 48px; }
+  .meta { font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: var(--red); margin: 0 0 8px; }
+  h1 { margin: 0 0 24px; font-size: 28px; }
+  .frame { background: var(--paper); border: 3px solid var(--ink); border-radius: 12px; overflow: hidden; }
+  .label { position: relative; }
+  .label::before {
+    content: attr(data-n);
+    position: absolute; left: 8px; top: 8px; z-index: 2;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--ink); color: var(--yellow);
+    font: 700 16px/32px Arial, sans-serif; text-align: center;
+  }
+  .shelf.label::before { left: auto; right: 8px; }
+  nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 24px 16px 56px; border-bottom: 2px dashed var(--box); flex-wrap: wrap; }
+  .logo { width: 140px; height: 32px; background: var(--box); border-radius: 4px; }
+  nav ul { display: flex; gap: 16px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+  nav li { padding: 6px 12px; background: var(--box); border-radius: 4px; font-size: 14px; }
+  nav li:last-child { background: var(--red); color: var(--paper); }
+  .sign { margin: 24px auto; width: min(560px, 90%); padding: 24px; background: var(--red); border: 5px solid var(--yellow); border-radius: 8px; color: var(--paper); text-align: center; font-weight: 700; letter-spacing: 2px; }
+  .window { margin: 0 auto; width: min(860px, 94%); border: 3px solid var(--ink); background: #EADBBE; position: relative; }
+  .window::after { /* the rehas: grill bars drawn over the shelves */
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(90deg, transparent 0 56px, rgba(43,29,20,.35) 56px 60px);
+  }
+  .shelf { display: flex; justify-content: space-around; gap: 8px; padding: 16px 16px 10px; border-bottom: 6px solid var(--line); }
+  .shelf button { width: 56px; height: 48px; background: var(--box); border: 2px solid var(--ink); cursor: pointer; font-size: 11px; }
+  .shelf button:hover, .shelf button:focus-visible { background: var(--yellow); transform: translateY(-6px); outline: none; }
+  .counter { width: min(860px, 94%); margin: 0 auto; background: var(--line); color: var(--paper); padding: 10px 16px 10px 52px; font-size: 14px; }
+  footer { margin-top: 24px; background: var(--ink); color: #D9C7A8; padding: 16px 24px; font-size: 13px; }
+  .notes { margin-top: 32px; display: grid; gap: 12px; }
+  .notes p { margin: 0; background: var(--paper); border-left: 6px solid var(--red); padding: 12px 16px; }
+  @media (max-width: 600px) { .shelf button { width: 40px; } }
+</style>
+</head>
+<body>
+<main>
+  <p class="meta">Process · Step 2 · Low-fidelity wireframe v1 (Nov 2)</p>
+  <h1>Homepage: the storefront</h1>
+
+  <div class="frame">
+    <nav class="label" data-n="1">
+      <div class="logo" aria-label="Logo placeholder"></div>
+      <ul><li>Home</li><li>Shelves</li><li>Tungkol</li><li>Pabili!</li></ul>
+    </nav>
+
+    <div class="sign label" data-n="2">[ STORE SIGN: “TINGI” ]</div>
+
+    <div class="window label" data-n="3">
+      <div class="shelf label" data-n="4">
+        <button title="Tingi">Tingi</button><button title="Utang">Utang</button><button title="Tambayan">Tambay</button><button title="Signs and labels">Signs</button><button title="Sachet economy">Sachet</button><button></button><button></button>
+      </div>
+      <div class="shelf"><button></button><button></button><button></button><button></button><button></button><button></button><button></button></div>
+      <div class="shelf"><button></button><button></button><button></button><button></button><button></button><button></button><button></button></div>
+    </div>
+    <div class="counter label" data-n="5">[ Tindera: “Ano po'ng sa inyo?” ]</div>
+
+    <footer>[ Footer: group name · credits · sources ]</footer>
+  </div>
+
+  <section class="notes" aria-label="Annotations">
+    <p><b>1 · Navigation:</b> Home, Shelves (gallery), Tungkol sa Tindahan (about), Pabili! (contact).</p>
+    <p><b>2 · Store sign (hero):</b> the site name in a hand-painted style; the main point of <i>emphasis</i>, centered for <i>balance</i>.</p>
+    <p><b>3 · Rehas window:</b> grill bars frame the shelves (<i>line</i>, <i>rhythm</i>); the visitor looks in like a customer (<i>perspective</i>).</p>
+    <p><b>4 · Products:</b> hover lifts and highlights a product in yellow; click opens its story. Try hovering the top shelf.</p>
+    <p><b>5 · Counter &amp; footer:</b> the tindera's greeting, then credits and sources.</p>
+  </section>
+</main>
+</body>
+</html>
