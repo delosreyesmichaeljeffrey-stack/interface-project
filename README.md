@@ -3,9 +3,12 @@
 A website you enter like a sari-sari store. Every product on the shelf opens a
 story about Filipino community life.
 
+**Live site:** https://delosreyesmichaeljeffrey-stack.github.io/interface-project/
+
 ## Run it
 
-Open `index.html` in a browser. No build step needed.
+Visit the live site above, or open `index.html` in a browser. No build step needed.
+The page-to-page transitions only play on the live site, in Chrome, Edge or Safari 18.2+.
 
 ## Structure
 
