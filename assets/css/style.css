@@ -1,0 +1,303 @@
+/* Tingi — storefront homepage */
+
+:root {
+  --kahoy: #2B1D14;     /* text, frames, grill */
+  --papel: #F6EBD3;     /* page background */
+  --paper-light: #FBF5E8;
+  --karatula: #B8382A;  /* signs, buttons */
+  --sachet: #F2B705;    /* highlights, hover */
+  --pintura: #1F6F78;   /* walls, links */
+  --kraft: #EADBBE;
+  --plywood: #8B6B4A;
+  --muted: #5C4A3D;
+
+  --font-sign: 'Bungee', Impact, sans-serif;
+  --font-body: 'Nunito Sans', Arial, sans-serif;
+  --font-hand: 'Caveat', cursive;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--pintura);
+  color: var(--kahoy);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute; left: 16px; top: -48px;
+  background: var(--sachet); color: var(--kahoy);
+  padding: 8px 12px; border-radius: 6px; font-weight: 800; z-index: 10;
+}
+.skip-link:focus { top: 12px; }
+
+/* ---------- Navigation ---------- */
+
+.site-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  padding: 12px clamp(16px, 4vw, 40px);
+  background: var(--kahoy); color: var(--papel);
+}
+
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--papel); text-decoration: none;
+}
+.brand-mark {
+  display: grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 6px;
+  background: var(--karatula); border: 2px solid var(--sachet);
+  font-family: var(--font-sign); font-size: 18px;
+}
+.brand-name { font-family: var(--font-sign); font-size: 22px; letter-spacing: 1px; }
+
+.site-nav ul {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  list-style: none; margin: 0; padding: 0;
+}
+.site-nav a, .site-nav .soon {
+  display: inline-block; padding: 6px 12px; border-radius: 6px;
+  font-weight: 700; font-size: 15px; text-decoration: none;
+}
+.site-nav a { color: var(--papel); }
+.site-nav a:hover, .site-nav a:focus-visible { background: rgba(246, 235, 211, 0.12); }
+.site-nav a[aria-current="page"] { background: var(--papel); color: var(--kahoy); }
+.site-nav .soon { color: rgba(246, 235, 211, 0.55); cursor: default; }
+.site-nav .soon small {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+  margin-left: 4px; color: var(--sachet);
+}
+
+/* ---------- Storefront ---------- */
+
+.storefront {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 48px) clamp(16px, 4vw, 32px) 0;
+  /* painted wall with a faint plank texture */
+  background:
+    repeating-linear-gradient(0deg, transparent 0 46px, rgba(0, 0, 0, 0.06) 46px 48px);
+}
+
+/* Hand-painted store sign: the page's main point of emphasis */
+.sign {
+  position: relative;
+  margin: 0 auto;
+  width: min(640px, 100%);
+  padding: clamp(14px, 3vw, 22px) 24px clamp(18px, 3.5vw, 26px);
+  background: var(--karatula);
+  border: 6px solid var(--sachet);
+  border-radius: 10px;
+  box-shadow: 0 10px 0 var(--kahoy);
+  text-align: center;
+  transform: rotate(-1deg);
+}
+.sign-kicker {
+  margin: 0;
+  font-family: var(--font-sign); color: var(--sachet);
+  font-size: clamp(14px, 2.6vw, 20px); letter-spacing: 3px;
+}
+.sign-name {
+  margin: 0;
+  font-family: var(--font-sign); font-weight: 400; color: var(--papel);
+  font-size: clamp(64px, 16vw, 132px); line-height: 1;
+  text-shadow: 4px 4px 0 var(--kahoy);
+}
+.sign-sub {
+  margin: 8px 0 0;
+  font-weight: 700; color: var(--papel);
+  font-size: clamp(14px, 2.4vw, 18px);
+}
+
+/* Striped tarpaulin awning above the window */
+.awning {
+  height: 34px;
+  margin-top: 28px;
+  background: repeating-linear-gradient(90deg, var(--karatula) 0 48px, var(--papel) 48px 96px);
+  border: 3px solid var(--kahoy);
+  border-radius: 6px 6px 0 0;
+  -webkit-mask: radial-gradient(circle 12px at 24px 34px, transparent 98%, #000) 0 0 / 48px 100% repeat-x;
+          mask: radial-gradient(circle 12px at 24px 34px, transparent 98%, #000) 0 0 / 48px 100% repeat-x;
+}
+
+/* The store window, looked into through the rehas */
+.window {
+  position: relative;
+  padding: 18px clamp(12px, 3vw, 28px) 8px;
+  background: linear-gradient(#6B4A2E, #5A3D25);
+  border: 6px solid var(--kahoy);
+  border-top: 0;
+  overflow: hidden;
+  scroll-margin-top: 16px;
+}
+
+.sachet-strip {
+  display: flex; justify-content: space-between; gap: 6px;
+  padding: 0 4px 14px;
+  border-top: 3px solid var(--kahoy);
+}
+.sachet-strip span {
+  flex: 1;
+  height: 44px; max-width: 34px;
+  background: var(--sachet);
+  border: 2px solid var(--kahoy);
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+.sachet-strip span:nth-child(3n+2) { background: var(--karatula); }
+.sachet-strip span:nth-child(3n) { background: var(--pintura); }
+
+.cardboard-sign {
+  position: absolute; right: clamp(12px, 4vw, 40px); top: 74px; z-index: 3;
+  padding: 6px 12px;
+  background: #D9B98A; color: var(--kahoy);
+  border: 2px solid #8B6B4A;
+  font-family: var(--font-hand); font-size: clamp(16px, 2.6vw, 22px); line-height: 1.05;
+  transform: rotate(4deg);
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.shelf {
+  display: flex; align-items: flex-end; justify-content: space-around;
+  gap: clamp(8px, 2vw, 20px);
+  min-height: 150px;
+  padding: 18px 8px 0;
+  border-bottom: 12px solid var(--plywood);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25);
+  margin-bottom: 18px;
+}
+
+/* Products that open a story */
+.product {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 6px 6px 8px;
+  background: none; border: 0; border-radius: 10px;
+  font: inherit; color: inherit; cursor: pointer;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+.product svg { width: clamp(52px, 9vw, 76px); height: auto; display: block; }
+.product .tag {
+  padding: 2px 10px;
+  background: var(--papel); color: var(--kahoy);
+  border: 2px solid var(--kahoy); border-radius: 999px;
+  font-weight: 800; font-size: clamp(12px, 1.8vw, 14px); white-space: nowrap;
+}
+.product:hover, .product:focus-visible {
+  transform: translateY(-8px);
+  background: rgba(242, 183, 5, 0.85);
+  outline: none;
+}
+.product:hover .tag, .product:focus-visible .tag { background: var(--sachet); }
+.product:focus-visible { box-shadow: 0 0 0 3px var(--papel); }
+
+/* Non-interactive stock that fills the shelves */
+.filler { display: block; flex: none; opacity: 0.9; }
+.filler.jar {
+  width: 44px; height: 62px;
+  background: rgba(251, 245, 232, 0.85);
+  border: 2px solid var(--kahoy); border-radius: 12px 12px 8px 8px;
+  box-shadow: inset 0 -26px 0 rgba(242, 183, 5, 0.7);
+  position: relative;
+}
+.filler.jar::before {
+  content: ""; position: absolute; left: 6px; right: 6px; top: -10px; height: 10px;
+  background: var(--pintura); border: 2px solid var(--kahoy); border-radius: 3px;
+}
+.filler.jar--red { box-shadow: inset 0 -26px 0 rgba(184, 56, 42, 0.75); }
+.filler.box {
+  width: 50px; height: 58px;
+  background: var(--karatula); border: 2px solid var(--kahoy); border-radius: 3px;
+  box-shadow: inset 0 18px 0 var(--papel);
+}
+.filler.box--teal { background: var(--pintura); }
+.filler.bottle {
+  width: 22px; height: 72px;
+  background: var(--pintura); border: 2px solid var(--kahoy);
+  border-radius: 10px 10px 4px 4px;
+}
+.filler.bottle--yellow { background: var(--sachet); }
+
+/* The rehas: grill bars drawn over the shelves */
+.rehas {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(12.5% - 5px), rgba(43, 29, 20, 0.55) calc(12.5% - 5px) 12.5%);
+  border-top: 5px solid rgba(43, 29, 20, 0.55);
+}
+
+/* Counter where the tindera greets you */
+.counter {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 8px 24px; flex-wrap: wrap;
+  padding: 14px clamp(16px, 3vw, 28px);
+  background: var(--plywood);
+  border: 6px solid var(--kahoy); border-top: 0;
+  color: var(--papel);
+}
+.greeting { margin: 0; font-family: var(--font-hand); font-size: clamp(26px, 4.5vw, 36px); line-height: 1.1; }
+.hint { margin: 0; font-weight: 700; font-size: 15px; }
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  margin-top: 40px;
+  padding: 24px clamp(16px, 4vw, 40px);
+  background: var(--kahoy); color: #D9C7A8;
+  text-align: center; font-size: 14px;
+}
+.site-footer p { margin: 4px 0; }
+.site-footer strong { font-family: var(--font-sign); font-weight: 400; color: var(--papel); }
+.footer-note { opacity: 0.75; }
+
+/* ---------- Story dialog ---------- */
+
+.story {
+  width: min(520px, calc(100% - 32px));
+  padding: 28px 28px 24px;
+  background: var(--paper-light); color: var(--kahoy);
+  border: 3px solid var(--kahoy); border-top: 14px solid var(--sachet);
+  border-radius: 10px;
+  box-shadow: 0 12px 0 rgba(0, 0, 0, 0.3);
+}
+.story::backdrop { background: rgba(43, 29, 20, 0.6); }
+.story-close-form { position: absolute; right: 10px; top: 6px; margin: 0; }
+.story-close {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: none; border: 2px solid transparent;
+  font-size: 26px; line-height: 1; color: var(--kahoy); cursor: pointer;
+}
+.story-close:hover, .story-close:focus-visible { border-color: var(--kahoy); outline: none; }
+.story-kicker {
+  margin: 0;
+  font-family: var(--font-sign); color: var(--karatula);
+  font-size: 13px; letter-spacing: 2px;
+}
+.story-title { margin: 4px 0 8px; font-family: var(--font-sign); font-weight: 400; font-size: 32px; line-height: 1.1; }
+.story-lead { margin: 0 0 10px; font-weight: 800; font-size: 18px; }
+.story-body { margin: 0 0 16px; color: var(--muted); }
+.story-soon {
+  display: inline-block; margin: 0;
+  font-family: var(--font-hand); font-size: 22px; color: var(--pintura);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product { transition: none; }
+  .sign { transform: none; }
+}
+
+@media (max-width: 560px) {
+  .cardboard-sign { display: none; }
+  .shelf { min-height: 130px; }
+  .filler.box, .filler.bottle--yellow { display: none; }
+}
