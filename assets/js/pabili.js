@@ -9,26 +9,39 @@ const easeOut = 'cubic-bezier(0.16, 1, 0.3, 1)';
 // Swaps one paper for the other. With motion on, the slip is torn off the pad
 // and the receipt prints out from the top.
 function swap(from, to, printing, focusTarget = to) {
-  const show = () => {
+  if (reduceMotion.matches || !from.animate) {
     from.hidden = true;
     to.hidden = false;
     focusTarget.focus();
-  };
-  if (reduceMotion.matches || !from.animate) {
-    show();
     return;
   }
+  // Both papers sit in the same spot (one grid cell), so the page never
+  // collapses between them: the new one appears underneath, the old one
+  // lifts away on top, and only then is the old one removed.
+  to.hidden = false;
+  from.classList.add('is-leaving');
+  to.animate(
+    printing
+      ? [{ clipPath: 'inset(0 0 100% 0)', transform: 'translateY(-16px)' }, { clipPath: 'inset(0 0 0 0)', transform: 'none' }]
+      : [{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }],
+    { duration: printing ? 900 : 360, delay: 120, easing: printing ? 'cubic-bezier(0.3, 0.7, 0.4, 1)' : easeOut, fill: 'backwards' }
+  );
   from.animate(
     [{ transform: 'none', opacity: 1 }, { transform: 'translateY(-28px) rotate(-4deg)', opacity: 0 }],
-    { duration: 260, easing: 'ease-in' }
-  ).finished.then(() => {
-    show();
-    to.animate(
-      printing
-        ? [{ clipPath: 'inset(0 0 100% 0)', transform: 'translateY(-16px)' }, { clipPath: 'inset(0 0 0 0)', transform: 'none' }]
-        : [{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }],
-      { duration: printing ? 900 : 360, easing: printing ? 'cubic-bezier(0.3, 0.7, 0.4, 1)' : easeOut }
-    );
+    { duration: 280, easing: 'ease-in', fill: 'forwards' }
+  ).finished.then((animation) => {
+    // ease the space the old paper took down to the new paper's height,
+    // so the page shrinks smoothly instead of jumping
+    const wrap = from.parentElement;
+    const tall = wrap.offsetHeight;
+    wrap.style.minHeight = tall + 'px';
+    from.hidden = true;
+    from.classList.remove('is-leaving');
+    animation.cancel();
+    const short = to.offsetHeight;
+    wrap.animate([{ minHeight: tall + 'px' }, { minHeight: short + 'px' }], { duration: 520, easing: easeOut })
+      .finished.then(() => { wrap.style.minHeight = ''; });
+    focusTarget.focus({ preventScroll: true });
   });
 }
 

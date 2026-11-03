@@ -68,28 +68,40 @@ const buttons = new Map(
 let current = null;
 let lastTrigger = null;
 
-// Runs a DOM change as a view transition where the browser supports it.
-// `kind` names the transition so the CSS can style it (vt-open, vt-step, ...).
-function transition(kind, update) {
+// Runs a change inside the story dialog as a view transition where the
+// browser supports it. `kind` (vt-open, vt-close, vt-next, vt-prev) lets the
+// CSS style it; `artId` names the one product drawing allowed to travel.
+function transition(kind, update, artId) {
   if (!document.startViewTransition || reduceMotion.matches) {
     update();
     return Promise.resolve();
   }
-  root.classList.add(kind);
+  root.classList.add('vt-dialog', kind);
+  if (artId) root.dataset.vtArt = artId;
   const vt = document.startViewTransition(update);
-  return vt.finished.finally(() => root.classList.remove(kind));
+  return vt.finished.finally(() => {
+    root.classList.remove('vt-dialog', kind);
+    delete root.dataset.vtArt;
+  });
 }
 
 /* ---------- The shutter: lifted once per visit ---------- */
 
-const windowEl = document.querySelector('.window');
-let opened = false;
-try { opened = sessionStorage.getItem('tingi-opened') === 'yes'; } catch (error) { /* ignore */ }
-if (!opened && !reduceMotion.matches) {
-  windowEl.classList.add('is-opening');
-  windowEl.querySelector('.shutter').addEventListener('animationend', () => {
-    windowEl.classList.remove('is-opening');
+// index.html's inline <head> script adds .shutter-run before the first paint,
+// so the open shelves never flash. Lift it once the sign's fonts are ready.
+const shutter = document.querySelector('.shutter');
+if (root.classList.contains('shutter-run')) {
+  const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+  Promise.race([fontsReady, new Promise((resolve) => setTimeout(resolve, 800))])
+    .then(() => root.classList.add('shutter-go'));
+  shutter.addEventListener('animationend', () => {
+    root.classList.remove('shutter-run', 'shutter-go');
   }, { once: true });
+  // In a hurry? A click lifts it straight away.
+  shutter.addEventListener('click', () => {
+    root.classList.add('shutter-go');
+    shutter.getAnimations().forEach((animation) => { animation.playbackRate = 4; });
+  });
 }
 try { sessionStorage.setItem('tingi-opened', 'yes'); } catch (error) { /* ignore */ }
 
@@ -117,27 +129,43 @@ function say(text) {
   }
 }
 
-function renderRead(latest) {
+// Stories read since the dialog last closed: their stamp, sachet and the
+// count are celebrated once the reader is back at the shelf to see them.
+const fresh = new Set();
+const pop = { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' };
+
+function renderRead() {
   buttons.forEach((button, id) => {
     const isRead = read.has(id);
     button.classList.toggle('is-read', isRead);
+    // a freshly read story keeps its stamp hidden until the reader is back at the shelf
+    button.classList.toggle('stamp-pending', fresh.has(id) && !reduceMotion.matches);
     button.querySelector('.read-label').textContent = isRead ? ' (read)' : '';
     tokens.get(id).classList.toggle('is-read', isRead);
   });
-  if (readCount.textContent !== String(read.size)) {
-    readCount.textContent = read.size;
-    if (latest && !reduceMotion.matches) {
-      readCount.animate(
-        [{ transform: 'scale(1.6)' }, { transform: 'scale(1)' }],
-        { duration: 360, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
-      );
-    }
-  }
+  readCount.textContent = read.size;
+}
+
+function celebrate(latest) {
   if (read.size === order.length) {
     say('“Kumpleto! Balik ka ulit, ha!”');
   } else if (latest) {
     say('“' + greetings[latest] + '”');
   }
+  if (!reduceMotion.matches && fresh.size) {
+    let delay = 0;
+    fresh.forEach((id) => {
+      buttons.get(id).classList.remove('stamp-pending');
+      buttons.get(id).querySelector('.stamp').animate(
+        [{ scale: 1.9, opacity: 0 }, { scale: 1, opacity: 1 }], { ...pop, delay, fill: 'backwards' }
+      );
+      tokens.get(id).animate([{ scale: 1.6 }, { scale: 1 }], { ...pop, delay: delay + 120 });
+      delay += 90;
+    });
+    readCount.animate([{ scale: 1.7 }, { scale: 1 }], { ...pop, delay: 160 });
+  }
+  buttons.forEach((button) => button.classList.remove('stamp-pending'));
+  fresh.clear();
 }
 
 /* ---------- The story dialog ---------- */
@@ -151,7 +179,7 @@ function fill(id) {
   critique.hidden = !story.critique;
   storyLink.href = 'kwento/' + id + '.html';
   art.replaceChildren(buttons.get(id).querySelector('svg').cloneNode(true));
-  art.style.viewTransitionName = 'art-' + id;
+  art.dataset.story = id;
 
   const index = order.indexOf(id);
   const before = order[(index + order.length - 1) % order.length];
@@ -161,6 +189,7 @@ function fill(id) {
   next.textContent = stories[after].title + ' →';
   next.dataset.story = after;
 
+  if (!read.has(id)) fresh.add(id);
   read.add(id);
   saveRead();
 }
@@ -173,7 +202,7 @@ function open(id) {
     button.classList.add('is-lifted');
     fill(id);
     dialog.showModal();
-  }).then(() => renderRead(id));
+  }, id).then(renderRead);
 }
 
 // Stepping to another story turns the page, left or right.
@@ -182,17 +211,18 @@ function step(id, direction) {
     buttons.get(current).classList.remove('is-lifted');
     buttons.get(id).classList.add('is-lifted');
     fill(id);
-  }).then(() => renderRead(id));
+  }).then(renderRead);
   lastTrigger = buttons.get(id);
 }
 
 // Closing puts the product back on its shelf.
 function close() {
   if (!dialog.open) return;
+  const closing = current;
   transition('vt-close', () => {
     dialog.close();
     buttons.forEach((button) => button.classList.remove('is-lifted'));
-  });
+  }, closing).then(() => celebrate(closing));
 }
 
 buttons.forEach((button, id) => {
@@ -227,8 +257,7 @@ dialog.addEventListener('keydown', (event) => {
 
 // Return focus to the product of the story that was last open.
 dialog.addEventListener('close', () => {
-  art.style.viewTransitionName = '';
   if (lastTrigger) lastTrigger.focus();
 });
 
-renderRead(null);
+renderRead();

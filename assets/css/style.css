@@ -104,7 +104,7 @@ body::before {
 .site-nav nav a[aria-current="page"] { background: var(--papel); color: var(--kahoy); }
 .site-nav nav .nav-pabili { background: var(--karatula); }
 .site-nav nav .nav-pabili:hover { background: var(--karatula-dark); }
-.site-nav nav .nav-pabili[aria-current="page"] { background: var(--sachet); color: var(--kahoy); }
+.site-nav nav .nav-pabili[aria-current="page"] { background: var(--papel); color: var(--kahoy); }
 
 /* ---------- Storefront ---------- */
 
@@ -130,7 +130,7 @@ body::before {
 .sign-name {
   margin: 0;
   font-family: var(--font-sign); font-weight: 400; color: var(--papel);
-  font-size: clamp(64px, 16vw, 132px); line-height: 1;
+  font-size: clamp(60px, 13vw, 108px); line-height: 1;
   text-shadow: 4px 4px 0 var(--kahoy);
 }
 .sign-band {
@@ -150,7 +150,7 @@ body::before {
 
 /* The one instruction, placed where the eye lands before the shelves */
 .shelf-hint {
-  margin: 36px auto 18px;
+  margin: 28px auto 16px;
   max-width: 34rem;
   text-align: center; color: var(--papel);
 }
@@ -264,11 +264,8 @@ body::before {
   font-family: var(--font-sign); font-size: 12px; white-space: nowrap;
   transform: rotate(12deg);
 }
-.product.is-read .stamp { display: block; animation: stamp 320ms var(--ease-out); }
-@keyframes stamp {
-  from { transform: rotate(12deg) scale(1.6); opacity: 0.4; }
-  to { transform: rotate(12deg) scale(1); opacity: 1; }
-}
+.product.is-read .stamp { display: block; }
+.product.stamp-pending .stamp { opacity: 0; }
 
 /* Non-interactive stock, stacked in tight clusters like a real tindahan,
    smaller and duller so the five stories stand out */
@@ -382,7 +379,10 @@ body::before {
   border: 0; border-radius: 6px;
   box-shadow: var(--shadow-paper);
 }
-.story[open] { animation: story-in 420ms var(--ease-out); }
+/* browsers without view transitions get a simple entrance instead */
+@supports not (view-transition-name: none) {
+  .story[open] { animation: story-in 420ms var(--ease-out); }
+}
 .story::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background:
@@ -572,7 +572,9 @@ body::before {
 }
 
 /* Order slip form */
-.slip-wrap { display: flex; justify-content: center; }
+.slip-wrap { display: grid; justify-items: center; align-items: start; }
+.slip-wrap > * { grid-area: 1 / 1; }
+.slip-wrap > .is-leaving { z-index: 1; pointer-events: none; }
 .slip, .receipt {
   width: min(520px, 100%);
   padding: 24px clamp(18px, 4vw, 32px) 30px;
@@ -895,19 +897,23 @@ a.story-step {
 .mini:hover .mini-art svg, .mini:focus-visible .mini-art svg { transform: translateY(-5px) rotate(-3deg); }
 .mini:hover .mini-name { color: var(--sachet); }
 
-/* ---------- Roll-up shutter (first visit only, added by main.js) ---------- */
+/* ---------- Roll-up shutter (first visit only) ----------
+   An inline script in index.html adds .shutter-run before the first paint;
+   main.js starts the lift once the fonts are ready, then removes it. */
 
 .shutter { display: none; }
-.window.is-opening .shutter {
+.shutter-run .shutter {
   display: flex; flex-direction: column; align-items: center; justify-content: space-between;
   position: absolute; inset: 0; z-index: 5;
-  padding: 26% 16px 18px;
+  padding: 56px 16px 18px;
   background:
     linear-gradient(rgba(43, 29, 20, 0.35), transparent 22%),
     repeating-linear-gradient(#237C86 0 16px, #17535A 16px 18px, #2A8A95 18px 20px);
   border-bottom: 12px solid var(--kahoy);
-  animation: shutter-lift 1150ms cubic-bezier(0.65, 0, 0.35, 1) 450ms both;
+  cursor: pointer;
+  animation: shutter-lift 1000ms cubic-bezier(0.65, 0, 0.35, 1) 200ms both paused;
 }
+.shutter-run.shutter-go .shutter { animation-play-state: running; }
 .shutter-note {
   padding: 8px 16px;
   background: var(--papel); color: var(--kahoy);
@@ -925,52 +931,82 @@ a.story-step {
   100% { transform: translateY(-103%); }
 }
 
-/* ---------- Page transitions (browsers with view transitions) ---------- */
+/* ---------- Transitions (browsers with view transitions) ----------
+   Rule: only things that exist on both sides travel. Everything else
+   fades with the page, so nothing is ever drawn on top of the wrong layer. */
 
 @view-transition { navigation: auto; }
 
+/* The big signs of the inner pages share a shape, so they morph into each other. */
+.page-sign { view-transition-name: page-sign; }
+.page-sign--hanging { view-transition-name: none; }
+/* The nav stays put, unless the page was scrolled (site.js sets data-vt-scrolled). */
 .site-nav { view-transition-name: site-nav; }
-.site-footer { view-transition-name: site-footer; }
-.sign, .page-sign { view-transition-name: page-sign; }
+html[data-vt-scrolled] .site-nav { view-transition-name: none; }
 
-/* each product's drawing is the same object on every page it appears */
-.product[data-story="tingi"] svg, .item[data-story="tingi"] .item-shelf svg, .kwento--tingi .story-art svg { view-transition-name: art-tingi; }
-.product[data-story="utang"] svg, .item[data-story="utang"] .item-shelf svg, .kwento--utang .story-art svg { view-transition-name: art-utang; }
-.product[data-story="tambayan"] svg, .item[data-story="tambayan"] .item-shelf svg, .kwento--tambayan .story-art svg { view-transition-name: art-tambayan; }
-.product[data-story="signs"] svg, .item[data-story="signs"] .item-shelf svg, .kwento--signs .story-art svg { view-transition-name: art-signs; }
-.product[data-story="sachet"] svg, .item[data-story="sachet"] .item-shelf svg, .kwento--sachet .story-art svg { view-transition-name: art-sachet; }
-.product.is-lifted svg { view-transition-name: none; }
+/* Only the drawing of the story being opened or left travels (html[data-vt-art]). */
+html[data-vt-art="tingi"] :is(.product[data-story="tingi"]:not(.is-lifted) svg, .story[open] #story-art[data-story="tingi"] svg, .item[data-story="tingi"] .item-shelf svg, .kwento--tingi .story-art svg) { view-transition-name: art-tingi; }
+html[data-vt-art="utang"] :is(.product[data-story="utang"]:not(.is-lifted) svg, .story[open] #story-art[data-story="utang"] svg, .item[data-story="utang"] .item-shelf svg, .kwento--utang .story-art svg) { view-transition-name: art-utang; }
+html[data-vt-art="tambayan"] :is(.product[data-story="tambayan"]:not(.is-lifted) svg, .story[open] #story-art[data-story="tambayan"] svg, .item[data-story="tambayan"] .item-shelf svg, .kwento--tambayan .story-art svg) { view-transition-name: art-tambayan; }
+html[data-vt-art="signs"] :is(.product[data-story="signs"]:not(.is-lifted) svg, .story[open] #story-art[data-story="signs"] svg, .item[data-story="signs"] .item-shelf svg, .kwento--signs .story-art svg) { view-transition-name: art-signs; }
+html[data-vt-art="sachet"] :is(.product[data-story="sachet"]:not(.is-lifted) svg, .story[open] #story-art[data-story="sachet"] svg, .item[data-story="sachet"] .item-shelf svg, .kwento--sachet .story-art svg) { view-transition-name: art-sachet; }
+html[data-vt-art] :is(.product, .story, .item, .kwento) svg { view-transition-class: art; }
 
 ::view-transition-group(*) {
-  animation-duration: 460ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-duration: 480ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
-::view-transition-old(root) { animation: vt-leave 180ms ease-in both; }
-::view-transition-new(root) { animation: vt-arrive 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-@keyframes vt-leave { to { opacity: 0; transform: translateY(-10px); } }
-@keyframes vt-arrive { from { opacity: 0; transform: translateY(18px); } }
+::view-transition-group(*.art) { z-index: 3; }
 
-/* opening and closing a story: only the product moves, the store stays put */
-html.vt-open::view-transition-old(root), html.vt-open::view-transition-new(root),
-html.vt-close::view-transition-old(root), html.vt-close::view-transition-new(root),
-html.vt-next::view-transition-old(root), html.vt-next::view-transition-new(root),
-html.vt-prev::view-transition-old(root), html.vt-prev::view-transition-new(root) { animation: none; }
+/* page to page: the new page settles in over the old one, which stays solid
+   underneath until it is fully covered, so nothing ever looks washed out */
+::view-transition-old(root), ::view-transition-new(root),
+::view-transition-old(page-sign), ::view-transition-new(page-sign) { mix-blend-mode: normal; }
+::view-transition-old(root) { animation: vt-hold 360ms both; }
+::view-transition-new(root) { animation: vt-arrive 360ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+::view-transition-old(page-sign) { animation: vt-hold 280ms both; }
+::view-transition-new(page-sign) { animation: vt-fade-in 280ms ease-out both; }
+/* anything without a partner on the other page clears out quickly */
+::view-transition-old(*):only-child { animation: vt-fade-out 120ms ease-out both; }
+::view-transition-new(*):only-child { animation: vt-arrive 360ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes vt-hold { 0%, 99% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-in { from { opacity: 0; } }
+@keyframes vt-arrive { from { opacity: 0; transform: translateY(10px); } }
 
-/* turning to the next or previous story slides the page */
-html.vt-next .story-page, html.vt-prev .story-page,
-html.vt-next .kwento, html.vt-prev .kwento { view-transition-name: story-page; }
-html.vt-next .story-art, html.vt-prev .story-art,
-html.vt-next .story-art svg, html.vt-prev .story-art svg,
-html.vt-next .product svg, html.vt-prev .product svg { view-transition-name: none !important; }
-html.vt-next::view-transition-group(story-page), html.vt-prev::view-transition-group(story-page) { animation: none; }
-html.vt-next::view-transition-old(story-page) { animation: page-out-left 150ms ease-in both; }
-html.vt-next::view-transition-new(story-page) { animation: page-in-right 420ms cubic-bezier(0.16, 1, 0.3, 1) 110ms both; }
-html.vt-prev::view-transition-old(story-page) { animation: page-out-right 150ms ease-in both; }
-html.vt-prev::view-transition-new(story-page) { animation: page-in-left 420ms cubic-bezier(0.16, 1, 0.3, 1) 110ms both; }
-@keyframes page-out-left { to { opacity: 0; transform: translateX(-48px) rotate(-2deg); } }
-@keyframes page-out-right { to { opacity: 0; transform: translateX(48px) rotate(2deg); } }
-@keyframes page-in-right { from { opacity: 0; transform: translateX(64px) rotate(2deg); } }
-@keyframes page-in-left { from { opacity: 0; transform: translateX(-64px) rotate(-2deg); } }
+/* ----- Inside the story dialog (html.vt-dialog) -----
+   The dialog is its own layer (story-sheet); the page behind only crossfades,
+   which dims or clears the backdrop. Nothing else is named. */
+html.vt-dialog :is(.site-nav, .page-sign) { view-transition-name: none; }
+html.vt-dialog .story[open] { view-transition-name: story-sheet; }
+html.vt-dialog::view-transition-old(root) { animation: vt-hold 240ms both; }
+html.vt-dialog::view-transition-new(root) { animation: vt-fade-in 240ms ease-out both; }
+::view-transition-group(story-sheet) { z-index: 2; }
+::view-transition-group(story-page) { z-index: 3; }
+::view-transition-new(story-sheet):only-child { animation: sheet-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+::view-transition-old(story-sheet):only-child { animation: sheet-out 220ms ease-in both; }
+@keyframes sheet-in { from { opacity: 0; transform: translateY(28px) scale(0.98); } }
+@keyframes sheet-out { to { opacity: 0; transform: translateY(18px) scale(0.98); } }
+
+/* ----- Turning to the next or previous story -----
+   A page wipe: the new page is uncovered exactly where the old one is
+   taken away, so the paper is never blank and the two never overlap. */
+html.vt-next :is(.story-page, .kwento), html.vt-prev :is(.story-page, .kwento) { view-transition-name: story-page; }
+html:is(.vt-next, .vt-prev)::view-transition-old(root),
+html:is(.vt-next, .vt-prev)::view-transition-new(root) { animation: none; }
+html:is(.vt-next, .vt-prev)::view-transition-group(story-page) { animation: none; }
+/* the dialog's frame (buttons, size) switches at once; only the page wipes */
+html:is(.vt-next, .vt-prev)::view-transition-group(story-sheet),
+html:is(.vt-next, .vt-prev)::view-transition-new(story-sheet) { animation: none; }
+html:is(.vt-next, .vt-prev)::view-transition-old(story-sheet) { animation: none; opacity: 0; }
+html.vt-next::view-transition-old(story-page) { animation: wipe-old-next 440ms cubic-bezier(0.65, 0, 0.35, 1) both; }
+html.vt-next::view-transition-new(story-page) { animation: wipe-new-next 440ms cubic-bezier(0.65, 0, 0.35, 1) both; }
+html.vt-prev::view-transition-old(story-page) { animation: wipe-old-prev 440ms cubic-bezier(0.65, 0, 0.35, 1) both; }
+html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms cubic-bezier(0.65, 0, 0.35, 1) both; }
+@keyframes wipe-old-next { from { clip-path: inset(-24px 0 -24px -24px); } to { clip-path: inset(-24px 100% -24px -24px); } }
+@keyframes wipe-new-next { from { clip-path: inset(-24px -24px -24px 100%); } to { clip-path: inset(-24px -24px -24px 0); } }
+@keyframes wipe-old-prev { from { clip-path: inset(-24px -24px -24px 0); } to { clip-path: inset(-24px -24px -24px 100%); } }
+@keyframes wipe-new-prev { from { clip-path: inset(-24px 100% -24px -24px); } to { clip-path: inset(-24px 0 -24px -24px); } }
 
 /* ---------- Small responses ---------- */
 
@@ -1034,6 +1070,7 @@ html.vt-prev::view-transition-new(story-page) { animation: page-in-left 420ms cu
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  .shutter-run .shutter { display: none; }
   .sachet-strip span:hover, .member:hover { animation: none; }
   .page-sign--hanging { animation: none; transform: rotate(-1deg); }
   .tokens i { transition: none; }
@@ -1045,14 +1082,13 @@ html.vt-prev::view-transition-new(story-page) { animation: page-in-left 420ms cu
 @media (prefers-reduced-motion: reduce) {
   .product, .slip-submit, .story-step, .item, .item-shelf svg, .mini-art svg { transition: none; }
   .item:hover, .item:focus-within, .item:hover .item-shelf svg, .mini:hover .mini-art svg, .mini:focus-visible .mini-art svg { transform: none; }
-  .story[open], .product.is-read .stamp { animation: none; }
+  .story[open] { animation: none; }
   .sign, .page-sign { transform: none; }
 }
 
 @media (max-width: 560px) {
   .cardboard-sign, .filler--wide, .stock--wide { display: none; }
   .sachet-strip span:nth-child(n+11) { display: none; }
-  .window.is-opening .shutter { padding-top: 40%; }
   .shelf { min-height: 150px; }
   .price-row { grid-template-columns: 1fr; }
 
