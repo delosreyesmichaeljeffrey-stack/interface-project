@@ -6,8 +6,13 @@ const receipt = document.getElementById('receipt');
 
 const rules = {
   name: (value) => value.trim() ? '' : 'Pakilagay ang pangalan mo.',
-  email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) ? '' : 'Pakilagay ang valid na email.',
-  message: (value) => value.trim() ? '' : 'Ano po ang order mo?'
+  email: (value) => {
+    if (!value.trim()) return 'Pakilagay ang email mo, halimbawa: juan@email.com';
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
+      ? ''
+      : 'Kulang ang email. Dapat may @ at domain, halimbawa: juan@email.com';
+  },
+  message: (value) => value.trim() ? '' : 'Ano po ang order mo? Isulat ang mensahe mo.'
 };
 
 function check(field) {
@@ -30,7 +35,9 @@ form.addEventListener('submit', (event) => {
     return;
   }
   document.getElementById('r-name').textContent = form.elements.name.value.trim();
+  document.getElementById('r-email').textContent = form.elements.email.value.trim();
   document.getElementById('r-type').textContent = form.elements.type.value;
+  document.getElementById('r-message').textContent = form.elements.message.value.trim();
   form.hidden = true;
   receipt.hidden = false;
   receipt.focus();
@@ -38,6 +45,7 @@ form.addEventListener('submit', (event) => {
 
 document.getElementById('new-order').addEventListener('click', () => {
   form.reset();
+  form.querySelectorAll('[aria-invalid]').forEach((input) => input.removeAttribute('aria-invalid'));
   receipt.hidden = true;
   form.hidden = false;
   form.elements.name.focus();

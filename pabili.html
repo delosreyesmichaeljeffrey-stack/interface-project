@@ -19,9 +19,9 @@
     <span class="brand-name">Tingi</span>
   </a>
   <nav aria-label="Main">
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="index.html#shelves">Shelves</a></li>
+    <ul lang="fil">
+      <li><a href="index.html">Tindahan</a></li>
+      <li><a href="index.html#shelves">Paninda</a></li>
       <li><a href="tungkol.html">Tungkol</a></li>
       <li><a href="pabili.html" class="nav-pabili" aria-current="page">Pabili!</a></li>
     </ul>
@@ -30,11 +30,10 @@
 
 <main id="main" class="page">
   <div class="page-sign">
-    <p class="sign-kicker">Contact us</p>
-    <h1 class="page-title">Pabili!</h1>
+    <h1 class="page-title" lang="fil">Pabili!</h1>
   </div>
 
-  <p class="page-intro">May tanong, feedback, o kwento tungkol sa sari-sari store ninyo? Fill out the order slip.</p>
+  <p class="page-intro"><span lang="fil">May tanong, feedback, o kwento tungkol sa sari‑sari store ninyo?</span> Write to us on the order slip.</p>
 
   <div class="slip-wrap">
     <form class="slip" id="slip" novalidate>
@@ -44,19 +43,19 @@
       </div>
 
       <div class="field">
-        <label for="name">Pangalan <span>(Name)</span></label>
-        <input id="name" name="name" type="text" autocomplete="name" required>
-        <p class="error" id="name-error"></p>
+        <label for="name"><span lang="fil">Pangalan</span> <span class="label-en">(Name)</span></label>
+        <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-error">
+        <p class="error" id="name-error" lang="fil"></p>
       </div>
 
       <div class="field">
         <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required>
-        <p class="error" id="email-error"></p>
+        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="juan@email.com" required aria-describedby="email-error">
+        <p class="error" id="email-error" lang="fil"></p>
       </div>
 
       <div class="field">
-        <label for="type">Ano'ng bibilhin? <span>(Type of message)</span></label>
+        <label for="type"><span lang="fil">Ano'ng bibilhin?</span> <span class="label-en">(Type of message)</span></label>
         <select id="type" name="type">
           <option>Question</option>
           <option>Feedback</option>
@@ -65,26 +64,27 @@
       </div>
 
       <div class="field">
-        <label for="message">Order <span>(Message)</span></label>
-        <textarea id="message" name="message" rows="5" required></textarea>
-        <p class="error" id="message-error"></p>
+        <label for="message">Order <span class="label-en">(Message)</span></label>
+        <textarea id="message" name="message" rows="5" required aria-describedby="message-error"></textarea>
+        <p class="error" id="message-error" lang="fil"></p>
       </div>
 
-      <button class="slip-submit" type="submit">Pabili po!</button>
+      <button class="slip-submit" type="submit" lang="fil">Pabili po!</button>
       <p class="slip-note">This prototype doesn’t send messages yet.</p>
     </form>
 
-    <section class="receipt" id="receipt" hidden aria-live="polite" tabindex="-1">
+    <section class="receipt" id="receipt" hidden tabindex="-1" aria-labelledby="receipt-title">
       <p class="slip-store">Tingi Sari-Sari Store</p>
-      <h2 class="receipt-title">Salamat po!</h2>
-      <p>Natanggap na ang order mo.</p>
+      <h2 class="receipt-title" id="receipt-title" lang="fil">Salamat po!</h2>
+      <p><span lang="fil">Naisulat na sa slip ang order mo.</span> This prototype doesn’t send it yet, so nobody has received it.</p>
       <dl class="receipt-lines">
-        <div><dt>Pangalan</dt><dd id="r-name"></dd></div>
+        <div><dt lang="fil">Pangalan</dt><dd id="r-name"></dd></div>
+        <div><dt>Email</dt><dd id="r-email"></dd></div>
         <div><dt>Type</dt><dd id="r-type"></dd></div>
+        <div class="receipt-message"><dt>Order</dt><dd id="r-message"></dd></div>
       </dl>
-      <p class="handnote">Balik ka ulit, ha!</p>
+      <p class="handnote" lang="fil">Balik ka ulit, ha!</p>
       <button class="slip-submit" type="button" id="new-order">New order</button>
-      <p class="slip-note">This prototype doesn’t send messages yet.</p>
     </section>
   </div>
 </main>
