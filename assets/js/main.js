@@ -105,6 +105,34 @@ if (root.classList.contains('shutter-run')) {
 }
 try { sessionStorage.setItem('tingi-opened', 'yes'); } catch (error) { /* ignore */ }
 
+/* ---------- Depth: the grill drifts a little as the pointer moves ---------- */
+
+// Things closer to you move more than things further away. The rehas (front)
+// moves most, the shelves (behind it) a little the other way.
+const storeWindow = document.querySelector('.window');
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  let frame = 0;
+  let x = 0;
+  let y = 0;
+  const apply = () => {
+    frame = 0;
+    storeWindow.style.setProperty('--px', x.toFixed(3));
+    storeWindow.style.setProperty('--py', y.toFixed(3));
+  };
+  storeWindow.addEventListener('pointermove', (event) => {
+    if (reduceMotion.matches) return;
+    const box = storeWindow.getBoundingClientRect();
+    x = ((event.clientX - box.left) / box.width - 0.5) * 2;
+    y = ((event.clientY - box.top) / box.height - 0.5) * 2;
+    if (!frame) frame = requestAnimationFrame(apply);
+  });
+  storeWindow.addEventListener('pointerleave', () => {
+    x = 0;
+    y = 0;
+    if (!frame) frame = requestAnimationFrame(apply);
+  });
+}
+
 /* ---------- The listahan of read stories ---------- */
 
 const read = new Set();

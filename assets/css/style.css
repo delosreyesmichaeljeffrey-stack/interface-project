@@ -111,61 +111,76 @@ body::before {
 .storefront {
   max-width: 1040px;
   margin: 0 auto;
-  padding: clamp(24px, 5vw, 48px) clamp(16px, 4vw, 32px) 0;
+  padding: clamp(20px, 3.5vw, 36px) clamp(16px, 4vw, 32px) 0;
 }
 
-/* Hand-painted store sign: the page's main point of emphasis.
+/* Hand-painted signboard mounted above the awning, as wide as the storefront.
    The hard bottom edge is the thickness of the plywood board. */
 .sign {
+  position: relative;
+  display: flex; align-items: center; justify-content: center; gap: 8px clamp(20px, 4vw, 40px);
+  flex-wrap: wrap;
   margin: 0 auto;
-  width: min(640px, 100%);
-  padding: clamp(18px, 3.5vw, 26px) 24px clamp(18px, 3.5vw, 26px);
+  padding: clamp(12px, 2vw, 18px) clamp(20px, 4vw, 44px);
   background: var(--karatula);
   border: 6px solid var(--sachet);
   border-radius: 10px;
   box-shadow: 0 10px 0 var(--kahoy), 0 22px 30px rgba(0, 0, 0, 0.3);
   text-align: center;
-  transform: rotate(-1deg);
+  transform: rotate(-0.6deg);
 }
+/* the two bolts holding the board to the wall */
+.sign::before, .sign::after {
+  content: ""; position: absolute; top: 50%;
+  width: 12px; height: 12px; margin-top: -6px; border-radius: 50%;
+  background: var(--muted-light); border: 2px solid var(--kahoy);
+}
+.sign::before { left: 12px; }
+.sign::after { right: 12px; }
 .sign-name {
   margin: 0;
   font-family: var(--font-sign); font-weight: 400; color: var(--papel);
-  font-size: clamp(60px, 13vw, 108px); line-height: 1;
+  font-size: clamp(56px, 9vw, 92px); line-height: 1;
   text-shadow: 4px 4px 0 var(--kahoy);
 }
+.sign-side { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .sign-band {
   display: inline-block;
-  margin: 10px 0 0;
+  margin: 0;
   padding: 2px 16px;
   background: var(--papel); color: var(--karatula);
   border-radius: 4px;
   font-family: var(--font-sign);
-  font-size: clamp(16px, 2.8vw, 22px); letter-spacing: 3px;
+  font-size: clamp(16px, 2.4vw, 22px); letter-spacing: 3px;
 }
 .sign-sub {
-  margin: 10px 0 0;
+  margin: 0;
   font-weight: 700; color: var(--papel);
-  font-size: clamp(15px, 2.4vw, 18px);
+  font-size: clamp(15px, 2vw, 18px);
 }
 
 /* The one instruction, placed where the eye lands before the shelves */
 .shelf-hint {
-  margin: 28px auto 16px;
-  max-width: 34rem;
+  margin: 22px auto 14px;
+  max-width: 40rem;
   text-align: center; color: var(--papel);
 }
 .shelf-hint span { display: block; }
-.shelf-hint span:first-child { font-weight: 800; font-size: 18px; }
-.shelf-hint-en { font-weight: 600; font-size: 15px; }
+.shelf-hint span:first-child { font-weight: 800; font-size: 17px; }
+.shelf-hint-en { font-weight: 600; font-size: 14px; }
 
-/* Striped tarpaulin awning above the window */
+/* Striped tarpaulin awning: tilted out toward the viewer, so its front
+   edge reads closer (and wider) than where it meets the wall */
 .awning {
-  height: 34px;
+  position: relative; z-index: 1;
+  height: 40px;
   background: repeating-linear-gradient(90deg, var(--karatula) 0 48px, var(--papel) 48px 96px);
   border: 3px solid var(--kahoy);
   border-radius: 6px 6px 0 0;
-  -webkit-mask: radial-gradient(circle 12px at 24px 34px, transparent 98%, #000) 0 0 / 48px 100% repeat-x;
-          mask: radial-gradient(circle 12px at 24px 34px, transparent 98%, #000) 0 0 / 48px 100% repeat-x;
+  transform: perspective(420px) rotateX(-30deg);
+  transform-origin: 50% 100%;
+  -webkit-mask: radial-gradient(circle 12px at 24px 40px, transparent 98%, #000) 0 0 / 48px 100% repeat-x;
+          mask: radial-gradient(circle 12px at 24px 40px, transparent 98%, #000) 0 0 / 48px 100% repeat-x;
 }
 
 /* The store window, looked into through the rehas */
@@ -183,12 +198,12 @@ body::before {
 
 .sachet-strip {
   display: flex; justify-content: space-between; gap: 4px;
-  padding: 0 4px 14px;
+  padding: 0 4px 10px;
   border-top: 3px solid var(--kahoy);
 }
 .sachet-strip span {
   flex: 1;
-  height: 40px; max-width: 30px;
+  height: 32px; max-width: 30px;
   background: var(--sachet);
   border: 2px solid var(--kahoy);
   border-top: 0;
@@ -206,7 +221,7 @@ body::before {
 .sachet-strip span:nth-child(3n) { background: var(--pintura); }
 
 .cardboard-sign {
-  position: absolute; right: clamp(12px, 4vw, 40px); top: 70px; z-index: 3;
+  position: absolute; right: clamp(12px, 4vw, 40px); top: calc(50% + 4px); z-index: 4;
   padding: 6px 12px;
   background: #D9B98A; color: var(--kahoy);
   border: 2px solid var(--plywood);
@@ -217,14 +232,26 @@ body::before {
 }
 
 .shelf {
+  position: relative;
   display: flex; align-items: flex-end; justify-content: space-between;
   gap: clamp(4px, 1.4vw, 14px);
-  min-height: 168px;
-  padding: 18px clamp(4px, 2vw, 18px) 0;
+  min-height: 146px;
+  padding: 14px clamp(4px, 2vw, 18px) 6px;
   border-bottom: 12px solid var(--plywood);
   box-shadow: 0 10px 12px -6px rgba(0, 0, 0, 0.5);
   margin-bottom: 18px;
+  transform: translate(calc(var(--px, 0) * -2px), calc(var(--py, 0) * -1px));
+  transition: transform 300ms var(--ease-out);
 }
+/* the shelf's top surface, seen from slightly above: wide at the front edge,
+   narrower where it meets the back wall (lines converge = perspective) */
+.shelf::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; z-index: 0;
+  height: 16px;
+  background: linear-gradient(#6E5034, #A3825C);
+  clip-path: polygon(0 100%, 100% 100%, 97% 0, 3% 0);
+}
+.shelf > * { position: relative; z-index: 1; }
 
 /* Products that open a story */
 .product {
@@ -237,7 +264,7 @@ body::before {
   transition: transform 220ms var(--ease-out), background-color 220ms var(--ease-out);
 }
 .product svg {
-  width: clamp(60px, 10vw, 100px); height: auto; display: block;
+  width: clamp(60px, 8vw, 86px); height: auto; display: block;
   filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.35));
 }
 .product .tag {
@@ -323,21 +350,61 @@ body::before {
 
 /* The rehas: grill bars drawn over the shelves */
 .rehas {
-  position: absolute; inset: 0; z-index: 1;
+  position: absolute; inset: 0 -10px; z-index: 3;
   pointer-events: none;
   background:
-    repeating-linear-gradient(90deg, transparent 0 calc(12.5% - 5px), rgba(43, 29, 20, 0.55) calc(12.5% - 5px) 12.5%);
-  border-top: 5px solid rgba(43, 29, 20, 0.55);
+    repeating-linear-gradient(90deg, transparent 0 calc(12.5% - 5px), rgba(43, 29, 20, 0.6) calc(12.5% - 5px) 12.5%);
+  border-top: 5px solid rgba(43, 29, 20, 0.6);
+  transform: translate(calc(var(--px, 0) * 7px), calc(var(--py, 0) * 3px));
+  transition: transform 300ms var(--ease-out);
 }
+/* the grill's shadow falls a little to the side, on the goods behind it */
+.rehas::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 calc(12.5% - 6px), rgba(0, 0, 0, 0.16) calc(12.5% - 6px) 12.5%);
+  transform: translateX(11px);
+  filter: blur(2px);
+}
+
+/* Inside the window: the side walls angle back toward the back wall,
+   and the awning shades the top */
+.window-walls {
+  position: absolute; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+.window-walls::before, .window-walls::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 26px;
+  background: linear-gradient(90deg, #3E2A1A, #57391F);
+}
+.window-walls::before { left: 0; clip-path: polygon(0 0, 100% 22px, 100% calc(100% - 10px), 0 100%); }
+.window-walls::after {
+  right: 0; background: linear-gradient(270deg, #3E2A1A, #57391F);
+  clip-path: polygon(0 22px, 100% 0, 100% 100%, 0 calc(100% - 10px));
+}
+.window::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 70px; z-index: 2;
+  background: linear-gradient(rgba(20, 12, 6, 0.55), transparent);
+  pointer-events: none;
+}
+.sachet-strip { position: relative; }
+.sachet-strip, .shelf { z-index: 1; }
 
 /* Counter where the tindera greets you and keeps your listahan */
 .counter {
+  position: relative;
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 8px 24px; flex-wrap: wrap;
-  padding: 16px clamp(16px, 3vw, 28px);
-  background: var(--counter);
+  padding: 22px clamp(16px, 3vw, 28px) 16px;
+  background: linear-gradient(var(--counter), #5C3F27);
   border: 6px solid var(--kahoy); border-top: 0;
   color: var(--papel);
+}
+/* the counter top, seen from above, sticks out past the window frame */
+.counter::before {
+  content: ""; position: absolute; left: -16px; right: -16px; top: -12px; height: 18px;
+  background: linear-gradient(#A3825C, #7E5E3D);
+  border: 3px solid var(--kahoy); border-radius: 3px;
+  clip-path: polygon(1.6% 0, 98.4% 0, 100% 100%, 0 100%);
 }
 .greeting { margin: 0; font-family: var(--font-hand); font-size: clamp(26px, 4.5vw, 36px); line-height: 1.1; }
 .progress { display: flex; align-items: center; gap: 12px; margin: 0; font-weight: 700; font-size: 16px; }
@@ -1071,6 +1138,7 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
   @view-transition { navigation: none; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
   .shutter-run .shutter { display: none; }
+  .rehas, .shelf { transform: none; transition: none; }
   .sachet-strip span:hover, .member:hover { animation: none; }
   .page-sign--hanging { animation: none; transform: rotate(-1deg); }
   .tokens i { transition: none; }
@@ -1088,6 +1156,10 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
 
 @media (max-width: 560px) {
   .cardboard-sign, .filler--wide, .stock--wide { display: none; }
+  .shelf .stock:not(:first-child) { display: none; }
+  .shelf { justify-content: space-around; }
+  .rehas { background: repeating-linear-gradient(90deg, transparent 0 calc(16.66% - 4px), rgba(43, 29, 20, 0.5) calc(16.66% - 4px) 16.66%); }
+  .rehas::before { display: none; }
   .sachet-strip span:nth-child(n+11) { display: none; }
   .shelf { min-height: 150px; }
   .price-row { grid-template-columns: 1fr; }
@@ -1119,6 +1191,7 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
 }
 
 @media (max-width: 420px) {
+  .shelf--three .stock { display: none; }
   .shelf { gap: 2px; padding-left: 0; padding-right: 0; }
   .product { padding: 6px 2px; }
   .product svg { width: 52px; }
