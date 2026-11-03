@@ -31,12 +31,16 @@
 html { background: var(--pintura); }
 
 body {
+  display: flex; flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   color: var(--kahoy);
   font-family: var(--font-body);
   line-height: 1.5;
   caret-color: var(--karatula);
 }
+
+body > main { flex: 1 0 auto; width: 100%; }
 
 /* painted wall with faint plank lines, behind everything */
 body::before {
@@ -611,10 +615,154 @@ body::before {
 .receipt-message dd { text-align: left; white-space: pre-wrap; }
 .receipt .handnote { margin: 0 0 16px; }
 
+/* ---------- Paninda (gallery) ---------- */
+
+.page--wide { max-width: 1100px; }
+
+.catalog {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 20px; list-style: none; margin: 0 0 56px; padding: 0;
+}
+.item {
+  flex: 1 1 280px; max-width: 340px;
+  position: relative;
+  display: flex; flex-direction: column;
+  background: var(--paper-light);
+  border: 3px solid var(--kahoy); border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 14px rgba(43, 29, 20, 0.3);
+  transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+}
+.item:hover, .item:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 24px rgba(43, 29, 20, 0.35);
+}
+/* each product sits on its own little shelf */
+.item-shelf {
+  display: grid; place-items: end center;
+  height: 150px; padding-top: 18px;
+  background: linear-gradient(#2B1D14, #4A3322);
+  border-bottom: 12px solid var(--plywood);
+}
+.item-shelf svg { width: 96px; height: auto; display: block; transition: transform 220ms var(--ease-out); }
+.item:hover .item-shelf svg { transform: translateY(-6px) rotate(-3deg); }
+.item-body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+.item-no { margin: 0 0 2px; font-family: var(--font-hand); font-size: 22px; line-height: 1; color: var(--pintura); }
+.item-title {
+  margin: 0;
+  font-family: var(--font-sign); font-weight: 400; font-size: 24px; line-height: 1.15;
+}
+.item-title a { color: var(--kahoy); text-decoration: none; }
+.item-title a::after { content: ""; position: absolute; inset: 0; border-radius: 8px; }
+.item-title a:focus-visible { outline: none; }
+.item:has(a:focus-visible) { outline: 3px solid var(--sachet); outline-offset: 3px; }
+.item .story-critique { align-self: flex-start; }
+.item-lead { margin: 10px 0 14px; color: var(--muted); flex: 1; text-wrap: pretty; }
+.item-cta { margin: 0; font-weight: 800; color: var(--karatula); }
+.item:hover .item-cta { text-decoration: underline; text-underline-offset: 3px; }
+
+/* fieldwork photos taped to the store wall */
+.photo-section { margin-bottom: 16px; }
+.section-note { margin: -6px 0 24px; color: var(--papel); font-weight: 600; max-width: 60ch; }
+.photo-wall {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 28px 24px; list-style: none; margin: 0; padding: 8px 0 0;
+}
+@media (min-width: 760px) {
+  .photo-wall { grid-template-columns: repeat(3, 1fr); }
+}
+.photo {
+  position: relative; margin: 0;
+  padding: 10px 10px 6px;
+  background: #FFFDF7;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: rotate(-1.5deg);
+}
+.photo-wall .photo:nth-child(even) { transform: rotate(1.5deg); }
+.photo-wall .photo:nth-child(3n) { transform: rotate(-0.5deg); }
+.photo::before {
+  content: ""; position: absolute; top: -10px; left: 50%;
+  width: 72px; height: 22px; margin-left: -36px;
+  background: rgba(242, 183, 5, 0.6);
+  transform: rotate(-4deg);
+}
+.photo-slot {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  aspect-ratio: 4 / 3; padding: 16px;
+  background: #E9DFCB; border: 2px dashed #B9A88C;
+  text-align: center;
+}
+.photo-slot span:first-child { font-family: var(--font-sign); font-size: 18px; color: var(--muted); }
+.photo-plan { font-size: 14px; color: var(--muted); max-width: 26ch; }
+.photo-caption { margin: 6px 0 0; font-family: var(--font-hand); font-size: 22px; line-height: 1.2; text-align: center; }
+
+/* ---------- Kwento (story pages) ---------- */
+
+.page--story { max-width: 760px; }
+.crumbs ol {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  list-style: none; margin: 0 0 16px; padding: 0;
+  color: var(--papel); font-weight: 700;
+}
+.crumbs li + li::before { content: "›"; margin-right: 6px; }
+.crumbs a { color: var(--papel); text-underline-offset: 3px; }
+.crumbs a[aria-current="page"] { text-decoration: none; }
+
+.kwento {
+  position: relative; isolation: isolate;
+  padding: 36px clamp(20px, 4vw, 40px) 32px 64px;
+  background: var(--paper-light);
+  border-radius: 6px;
+  box-shadow: var(--shadow-paper);
+}
+.kwento::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 6px;
+  background:
+    linear-gradient(90deg, transparent 42px, rgba(184, 56, 42, 0.55) 42px 44px, transparent 44px),
+    repeating-linear-gradient(transparent 0 31px, #C9DBE6 31px 32px);
+  pointer-events: none;
+}
+.kwento .story-head { padding-right: 0; margin-bottom: 20px; }
+.kwento .story-art { width: 96px; }
+.kwento .story-title { font-size: clamp(32px, 7vw, 48px); }
+.kwento .story-lead { font-size: clamp(19px, 2.6vw, 22px); }
+.kwento .story-body { font-size: 18px; max-width: 62ch; }
+.kwento .story-soon { margin-bottom: 28px; }
+.photo--story { max-width: 440px; margin: 0 auto 28px; }
+.kwento-quote {
+  margin: 0 0 28px;
+  font-family: var(--font-hand); font-size: clamp(26px, 4.5vw, 34px); line-height: 1.15;
+  color: var(--karatula);
+}
+.kwento-sources { padding-top: 16px; border-top: 2px dashed var(--kahoy); }
+.kwento-sources h2 { margin: 0 0 4px; font-family: var(--font-sign); font-weight: 400; font-size: 20px; }
+.kwento-sources p { margin: 0; color: var(--muted); }
+
+.kwento-nav, .notfound-links {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between;
+  margin: 24px 0 0;
+}
+a.story-step {
+  display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+.story-step--back { background: var(--kahoy); color: var(--papel); border-color: var(--papel); }
+.story-step--back:hover { background: var(--board); }
+
+.story-more { margin: 0; }
+.story-more a { font-weight: 800; color: var(--karatula); text-underline-offset: 3px; }
+.story-more a:hover { color: var(--karatula-dark); }
+
+/* ---------- 404 ---------- */
+
+.notfound { text-align: left; }
+.notfound .notfound-links { justify-content: flex-start; margin: 0; }
+
 /* ---------- Motion and small screens ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .product, .slip-submit, .story-step { transition: none; }
+  .product, .slip-submit, .story-step, .item, .item-shelf svg { transition: none; }
+  .item:hover, .item:focus-within, .item:hover .item-shelf svg { transform: none; }
   .story[open], .product.is-read .stamp { animation: none; }
   .sign, .page-sign { transform: none; }
 }
@@ -634,6 +782,12 @@ body::before {
   .story-page { padding: 24px 18px 6px 52px; }
   .story-nav { padding: 12px 16px 24px 52px; }
   .story-step { flex: 1; }
+  .kwento { padding: 28px 18px 24px 56px; }
+  .kwento::before { background:
+    linear-gradient(90deg, transparent 38px, rgba(184, 56, 42, 0.55) 38px 40px, transparent 40px),
+    repeating-linear-gradient(transparent 0 31px, #C9DBE6 31px 32px); }
+  .kwento .story-art { width: 64px; }
+  .kwento-nav .story-step { flex: 1 1 100%; }
 }
 
 @media (max-width: 420px) {

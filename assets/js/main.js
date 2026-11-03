@@ -48,6 +48,7 @@ const fields = {
   body: document.getElementById('story-body')
 };
 const critique = document.getElementById('story-critique');
+const storyLink = document.getElementById('story-link');
 const prev = document.getElementById('story-prev');
 const next = document.getElementById('story-next');
 const greeting = document.getElementById('greeting');
@@ -92,6 +93,7 @@ function show(id) {
   fields.lead.textContent = story.lead;
   fields.body.textContent = story.body;
   critique.hidden = !story.critique;
+  storyLink.href = 'kwento/' + id + '.html';
   art.replaceChildren(buttons.get(id).querySelector('svg').cloneNode(true));
 
   const index = order.indexOf(id);
