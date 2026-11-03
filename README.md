@@ -10,6 +10,9 @@ Open `index.html` in a browser. No build step needed.
 ## Structure
 
 - `index.html`: storefront homepage (store sign, rehas window, shelves, counter)
+- `tungkol.html`: Tungkol sa Tindahan, about the project and the team
+- `pabili.html`: Pabili!, contact form styled as an order slip (prototype, sends nothing)
 - `assets/css/style.css`: styles, palette and typography
 - `assets/js/main.js`: opens each product's story
+- `assets/js/pabili.js`: order slip validation and receipt
 - `docs/process/`: design process documentation (moodboard, wireframe, screenshots)
