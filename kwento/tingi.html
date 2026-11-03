@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tingi — Tingi</title>
+<title>Kwento: Tingi — Tingi</title>
 <meta name="description" content="Buying in small portions to get through one day at a time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,25 +32,32 @@
   <nav class="crumbs" aria-label="Breadcrumb">
     <ol>
       <li><a href="../paninda.html" lang="fil">Paninda</a></li>
-      <li><a href="tingi.html" aria-current="page">Tingi</a></li>
+      <li><span aria-current="page">Tingi</span></li>
     </ol>
   </nav>
 
-  <article class="kwento" data-story="tingi">
+  <article class="kwento kwento--tingi" data-story="tingi">
     <header class="story-head">
       <div class="story-art" aria-hidden="true"><svg viewBox="0 0 60 80" aria-hidden="true"><rect x="8" y="4" width="44" height="72" rx="4" fill="#F2B705" stroke="#2B1D14" stroke-width="3"/><path d="M8 14h44M8 66h44" stroke="#2B1D14" stroke-width="2" stroke-dasharray="3 3"/><circle cx="30" cy="40" r="11" fill="#F6EBD3" stroke="#2B1D14" stroke-width="2"/><path d="M25 40h10" stroke="#B8382A" stroke-width="3" stroke-linecap="round"/></svg></div>
       <div>
-        <p class="item-no">Kwento 1 of 5</p>
         <h1 class="story-title">Tingi</h1>
       </div>
     </header>
 
-    <p class="story-lead">Buying in small portions to get through one day at a time.</p>
-    <p class="story-body">One sachet of shampoo, one cup of rice, one piece of candy. Tingi lets families with a daily budget buy only what they need today.</p>
-    <p class="story-soon">Full story coming soon.</p>
+    <div class="kwento-lines">
+      <p class="story-lead"><span class="lead-mark">Buying in small portions to get through one day at a time.</span></p>
+      <p class="story-body">One sachet of shampoo, one cup of rice, one piece of candy. Tingi lets families with a daily budget buy only what they need today.</p>
+      <h2 class="kwento-subhead" lang="fil">Ano’ng sasagutin ng kwentong ito</h2>
+      <ul class="kwento-asks">
+        <li>Why do families buy one sachet or one cup at a time?</li>
+        <li>What does a typical tingi purchase look like in our barangay?</li>
+        <li>How does the tindera decide what to sell per piece?</li>
+      </ul>
+      <p class="story-soon">Full story coming soon.</p>
+    </div>
 
     <figure class="photo photo--story">
-      <div class="photo-slot"><span>Litrato soon</span><span class="photo-plan">A row of hanging sachets, or a tindera measuring out one cup of rice</span></div>
+      <div class="photo-slot"><span class="photo-soon" aria-hidden="true">Litrato soon</span><span class="photo-plan"><span class="visually-hidden">Planned photo: </span>A row of hanging sachets, or a tindera measuring out one cup of rice</span></div>
       <figcaption class="photo-caption">Photo from our fieldwork</figcaption>
     </figure>
 
@@ -60,12 +67,14 @@
       <h2 id="sources-heading" lang="fil">Pinagkunan</h2>
       <p>Sources for this story will be listed here.</p>
     </section>
+
+    <p class="kwento-page-no" lang="fil">Pahina 1 / 5</p>
   </article>
 
   <nav class="kwento-nav" aria-label="Other stories">
-    <a class="story-step" href="sachet.html"><span class="visually-hidden">Previous story: </span>← Sachet economy</a>
-    <a class="story-step story-step--back" href="../paninda.html" lang="fil">Lahat ng paninda</a>
-    <a class="story-step story-step--next" href="utang.html"><span class="visually-hidden">Next story: </span>Utang →</a>
+    <a class="story-step story-step--prev" href="sachet.html"><span class="visually-hidden">Previous story: </span>←&nbsp;Huling kwento: Sachet economy</a>
+    <a class="story-step story-step--next" href="utang.html"><span class="visually-hidden">Next story: </span>Utang&nbsp;→</a>
+    <a class="story-step story-step--all" href="../paninda.html" lang="fil">Lahat ng paninda</a>
   </nav>
 </main>
 
