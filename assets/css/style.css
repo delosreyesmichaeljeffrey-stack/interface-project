@@ -194,6 +194,14 @@ body::before {
   border-top: 0;
   border-radius: 0 0 4px 4px;
 }
+.sachet-strip span { transform-origin: top center; }
+.sachet-strip span:hover { animation: swing 1100ms var(--ease-out); }
+@keyframes swing {
+  15% { transform: rotate(16deg); }
+  35% { transform: rotate(-11deg); }
+  55% { transform: rotate(6deg); }
+  75% { transform: rotate(-3deg); }
+}
 .sachet-strip span:nth-child(3n+2) { background: var(--karatula); }
 .sachet-strip span:nth-child(3n) { background: var(--pintura); }
 
@@ -243,6 +251,7 @@ body::before {
   background: rgba(242, 183, 5, 0.2);
 }
 .product:hover .tag, .product:focus-visible .tag { background: var(--sachet); }
+.product:active { transform: translateY(-4px) scale(0.96); transition-duration: 80ms; }
 .product:focus-visible { outline: 3px solid var(--papel); outline-offset: 2px; }
 
 /* "Nabili na" stamp on stories already read */
@@ -334,7 +343,21 @@ body::before {
   color: var(--papel);
 }
 .greeting { margin: 0; font-family: var(--font-hand); font-size: clamp(26px, 4.5vw, 36px); line-height: 1.1; }
-.progress { margin: 0; font-weight: 700; font-size: 16px; }
+.progress { display: flex; align-items: center; gap: 12px; margin: 0; font-weight: 700; font-size: 16px; }
+.progress p { margin: 0; }
+
+/* five little sachets that fill in as stories are read */
+.tokens { display: flex; gap: 6px; }
+.tokens i {
+  width: 16px; height: 22px;
+  border: 2px dashed rgba(246, 235, 211, 0.55); border-radius: 2px 2px 5px 5px;
+  transition: background-color 300ms var(--ease-out), border-color 300ms var(--ease-out), transform 420ms var(--ease-out);
+}
+.tokens i.is-read { border: 2px solid var(--kahoy); background: var(--sachet); transform: rotate(-8deg) translateY(-2px); }
+.tokens i.is-read:nth-child(2) { background: var(--karatula); transform: rotate(6deg) translateY(-2px); }
+.tokens i.is-read:nth-child(3) { background: var(--pintura); }
+.tokens i.is-read:nth-child(4) { background: var(--papel); transform: rotate(5deg) translateY(-2px); }
+.tokens i.is-read:nth-child(5) { background: var(--karatula); }
 .progress strong { font-family: var(--font-sign); font-weight: 400; color: var(--sachet); font-size: 24px; line-height: 1; }
 
 /* ---------- Footer ---------- */
@@ -872,6 +895,151 @@ a.story-step {
 .mini:hover .mini-art svg, .mini:focus-visible .mini-art svg { transform: translateY(-5px) rotate(-3deg); }
 .mini:hover .mini-name { color: var(--sachet); }
 
+/* ---------- Roll-up shutter (first visit only, added by main.js) ---------- */
+
+.shutter { display: none; }
+.window.is-opening .shutter {
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  position: absolute; inset: 0; z-index: 5;
+  padding: 26% 16px 18px;
+  background:
+    linear-gradient(rgba(43, 29, 20, 0.35), transparent 22%),
+    repeating-linear-gradient(#237C86 0 16px, #17535A 16px 18px, #2A8A95 18px 20px);
+  border-bottom: 12px solid var(--kahoy);
+  animation: shutter-lift 1150ms cubic-bezier(0.65, 0, 0.35, 1) 450ms both;
+}
+.shutter-note {
+  padding: 8px 16px;
+  background: var(--papel); color: var(--kahoy);
+  font-family: var(--font-hand); font-size: clamp(22px, 4vw, 30px); line-height: 1.05; text-align: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: rotate(-3deg);
+}
+.shutter-handle {
+  width: 96px; height: 12px;
+  background: var(--kahoy); border-radius: 999px;
+}
+@keyframes shutter-lift {
+  0% { transform: translateY(0); }
+  14% { transform: translateY(2.5%); }
+  100% { transform: translateY(-103%); }
+}
+
+/* ---------- Page transitions (browsers with view transitions) ---------- */
+
+@view-transition { navigation: auto; }
+
+.site-nav { view-transition-name: site-nav; }
+.site-footer { view-transition-name: site-footer; }
+.sign, .page-sign { view-transition-name: page-sign; }
+
+/* each product's drawing is the same object on every page it appears */
+.product[data-story="tingi"] svg, .item[data-story="tingi"] .item-shelf svg, .kwento--tingi .story-art svg { view-transition-name: art-tingi; }
+.product[data-story="utang"] svg, .item[data-story="utang"] .item-shelf svg, .kwento--utang .story-art svg { view-transition-name: art-utang; }
+.product[data-story="tambayan"] svg, .item[data-story="tambayan"] .item-shelf svg, .kwento--tambayan .story-art svg { view-transition-name: art-tambayan; }
+.product[data-story="signs"] svg, .item[data-story="signs"] .item-shelf svg, .kwento--signs .story-art svg { view-transition-name: art-signs; }
+.product[data-story="sachet"] svg, .item[data-story="sachet"] .item-shelf svg, .kwento--sachet .story-art svg { view-transition-name: art-sachet; }
+.product.is-lifted svg { view-transition-name: none; }
+
+::view-transition-group(*) {
+  animation-duration: 460ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-old(root) { animation: vt-leave 180ms ease-in both; }
+::view-transition-new(root) { animation: vt-arrive 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes vt-leave { to { opacity: 0; transform: translateY(-10px); } }
+@keyframes vt-arrive { from { opacity: 0; transform: translateY(18px); } }
+
+/* opening and closing a story: only the product moves, the store stays put */
+html.vt-open::view-transition-old(root), html.vt-open::view-transition-new(root),
+html.vt-close::view-transition-old(root), html.vt-close::view-transition-new(root),
+html.vt-next::view-transition-old(root), html.vt-next::view-transition-new(root),
+html.vt-prev::view-transition-old(root), html.vt-prev::view-transition-new(root) { animation: none; }
+
+/* turning to the next or previous story slides the page */
+html.vt-next .story-page, html.vt-prev .story-page,
+html.vt-next .kwento, html.vt-prev .kwento { view-transition-name: story-page; }
+html.vt-next .story-art, html.vt-prev .story-art,
+html.vt-next .story-art svg, html.vt-prev .story-art svg,
+html.vt-next .product svg, html.vt-prev .product svg { view-transition-name: none !important; }
+html.vt-next::view-transition-group(story-page), html.vt-prev::view-transition-group(story-page) { animation: none; }
+html.vt-next::view-transition-old(story-page) { animation: page-out-left 150ms ease-in both; }
+html.vt-next::view-transition-new(story-page) { animation: page-in-right 420ms cubic-bezier(0.16, 1, 0.3, 1) 110ms both; }
+html.vt-prev::view-transition-old(story-page) { animation: page-out-right 150ms ease-in both; }
+html.vt-prev::view-transition-new(story-page) { animation: page-in-left 420ms cubic-bezier(0.16, 1, 0.3, 1) 110ms both; }
+@keyframes page-out-left { to { opacity: 0; transform: translateX(-48px) rotate(-2deg); } }
+@keyframes page-out-right { to { opacity: 0; transform: translateX(48px) rotate(2deg); } }
+@keyframes page-in-right { from { opacity: 0; transform: translateX(64px) rotate(2deg); } }
+@keyframes page-in-left { from { opacity: 0; transform: translateX(-64px) rotate(-2deg); } }
+
+/* ---------- Small responses ---------- */
+
+/* name tags swing on their clip when touched */
+.member { transform-origin: 50% 0; }
+.member:hover { animation: tag-swing 1000ms var(--ease-out); }
+@keyframes tag-swing {
+  20% { transform: rotate(4deg); }
+  45% { transform: rotate(-3deg); }
+  70% { transform: rotate(1.5deg); }
+}
+
+/* the 404 sign drops onto its nail and swings */
+.page-sign--hanging { position: relative; margin-top: 64px; transform-origin: 50% -40px; animation: sign-drop 1100ms var(--ease-out) both; }
+.page-sign--hanging::before {
+  content: ""; position: absolute; left: 50%; top: -52px;
+  width: 160px; height: 56px; margin-left: -80px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 56'%3E%3Cpath d='M80 10L8 54M80 10l72 44' stroke='%232B1D14' stroke-width='3' fill='none'/%3E%3Ccircle cx='80' cy='9' r='7' fill='%23D9C7A8' stroke='%232B1D14' stroke-width='3'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+@keyframes sign-drop {
+  0% { opacity: 0; transform: translateY(-36px) rotate(-12deg); }
+  30% { opacity: 1; transform: translateY(0) rotate(8deg); }
+  52% { transform: rotate(-5deg); }
+  72% { transform: rotate(2.5deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+/* Pabili: message types as picks on the slip */
+.chips-field { border: 0; margin: 0 0 14px; padding: 0; min-width: 0; }
+.chips-field legend { padding: 0; margin-bottom: 6px; font-weight: 800; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; cursor: pointer; }
+.chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.chip span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+  background: #FFFDF7; color: var(--kahoy);
+  border: 2px solid var(--kahoy); border-radius: 999px;
+  font-weight: 700;
+  transition: background-color 160ms var(--ease-out), transform 220ms var(--ease-out);
+}
+.chip:hover span { background: var(--papel); }
+.chip input:checked + span { background: var(--sachet); transform: rotate(-2deg); }
+.chip input:checked + span::before {
+  content: ""; width: 14px; height: 14px; margin-right: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2 7.5l3.2 3.2L12 3.5' fill='none' stroke='%232B1D14' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.chip input:focus-visible + span { outline: 3px solid var(--karatula); outline-offset: 2px; }
+
+/* keyboard shortcut hint under the story pages (hidden on touch screens) */
+.key-hint { margin: 16px 0 0; text-align: center; color: var(--papel); font-size: 14px; font-weight: 600; }
+.key-hint kbd {
+  display: inline-block; min-width: 24px; padding: 0 6px;
+  background: var(--paper-light); color: var(--kahoy);
+  border: 2px solid var(--kahoy); border-bottom-width: 3px; border-radius: 5px;
+  font: 800 13px/1.5 var(--font-body); text-align: center;
+}
+@media (hover: none) { .key-hint { display: none; } }
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  .sachet-strip span:hover, .member:hover { animation: none; }
+  .page-sign--hanging { animation: none; transform: rotate(-1deg); }
+  .tokens i { transition: none; }
+  .chip span { transition: none; }
+}
+
 /* ---------- Motion and small screens ---------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -883,6 +1051,8 @@ a.story-step {
 
 @media (max-width: 560px) {
   .cardboard-sign, .filler--wide, .stock--wide { display: none; }
+  .sachet-strip span:nth-child(n+11) { display: none; }
+  .window.is-opening .shutter { padding-top: 40%; }
   .shelf { min-height: 150px; }
   .price-row { grid-template-columns: 1fr; }
 

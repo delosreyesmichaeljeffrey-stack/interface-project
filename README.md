@@ -15,7 +15,8 @@ Open `index.html` in a browser. No build step needed.
 - `tungkol.html`: Tungkol sa Tindahan, about the project and the team
 - `pabili.html`: Pabili!, contact form styled as an order slip (prototype, sends nothing)
 - `assets/css/style.css`: styles, palette and typography
-- `assets/js/main.js`: opens each product's story
+- `assets/js/site.js`: page-to-page transitions and arrow-key shortcuts between stories (loaded on every page)
+- `assets/js/main.js`: lifts the shutter on the first visit and opens each product's story
 - `assets/js/paninda.js`: stamps "Nabili na" on stories already read
 - `assets/js/kwento.js`: marks a story as read when its page is opened
 - `assets/js/pabili.js`: order slip validation and receipt

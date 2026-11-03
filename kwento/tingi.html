@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Caveat:wght@600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/css/style.css">
+<script src="../assets/js/site.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -72,10 +73,11 @@
   </article>
 
   <nav class="kwento-nav" aria-label="Other stories">
-    <a class="story-step story-step--prev" href="sachet.html"><span class="visually-hidden">Previous story: </span>←&nbsp;Huling kwento: Sachet economy</a>
-    <a class="story-step story-step--next" href="utang.html"><span class="visually-hidden">Next story: </span>Utang&nbsp;→</a>
+    <a class="story-step story-step--prev" href="sachet.html" data-step="prev" aria-keyshortcuts="ArrowLeft"><span class="visually-hidden">Previous story: </span>←&nbsp;Huling kwento: Sachet economy</a>
+    <a class="story-step story-step--next" href="utang.html" data-step="next" aria-keyshortcuts="ArrowRight"><span class="visually-hidden">Next story: </span>Utang&nbsp;→</a>
     <a class="story-step story-step--all" href="../paninda.html" lang="fil">Lahat ng paninda</a>
   </nav>
+  <p class="key-hint" aria-hidden="true">Tip: press <kbd>←</kbd> or <kbd>→</kbd> to turn the page.</p>
 </main>
 
 <footer class="site-footer">

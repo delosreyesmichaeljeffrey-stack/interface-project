@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Caveat:wght@600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/site.js"></script>
 </head>
 <body>
 <a class="skip-link" href="#shelves">Skip to the shelves</a>
@@ -103,11 +104,20 @@
       </div>
 
       <div class="rehas" aria-hidden="true"></div>
+
+      <!-- Roll-up shutter: only shown (and lifted) by main.js on the first visit -->
+      <div class="shutter" aria-hidden="true">
+        <span class="shutter-note" lang="fil">Sandali lang,<br>magbubukas na!</span>
+        <span class="shutter-handle"></span>
+      </div>
     </div>
 
     <div class="counter">
       <p class="greeting" id="greeting" lang="fil">“Ano po'ng sa inyo?”</p>
-      <p class="progress" id="progress" aria-live="polite"><span lang="fil">Nabasa mo:</span> <strong id="read-count">0</strong> of 5 stories</p>
+      <div class="progress" id="progress" aria-live="polite">
+        <span class="tokens" aria-hidden="true"><i data-story="tingi"></i><i data-story="utang"></i><i data-story="tambayan"></i><i data-story="signs"></i><i data-story="sachet"></i></span>
+        <p><span lang="fil">Nabasa mo:</span> <strong id="read-count">0</strong> of 5 stories</p>
+      </div>
     </div>
   </section>
 </main>
