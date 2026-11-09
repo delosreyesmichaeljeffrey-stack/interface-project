@@ -71,4 +71,35 @@
     const link = document.querySelector('.kwento-nav a[data-step="' + step + '"]');
     if (link) link.click();
   });
+  // Phones: the nav folds into a burger button. The button is added here so
+  // all pages share it; without JS the normal nav stays visible.
+  const setupMenu = () => {
+    const header = document.querySelector('.site-nav');
+    const nav = header && header.querySelector('nav');
+    if (!nav || header.querySelector('.nav-toggle')) return;
+    root.classList.add('nav-js');
+    nav.id = nav.id || 'site-menu';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'nav-toggle';
+    button.setAttribute('aria-controls', nav.id);
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-label', 'Menu');
+    button.innerHTML = '<span class="nav-toggle-bars" aria-hidden="true"></span>';
+    header.insertBefore(button, nav);
+    const setOpen = (open) => {
+      header.classList.toggle('is-open', open);
+      button.setAttribute('aria-expanded', String(open));
+    };
+    button.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
+    nav.addEventListener('click', (event) => { if (event.target.closest('a')) setOpen(false); });
+    document.addEventListener('click', (event) => { if (!header.contains(event.target)) setOpen(false); });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && header.classList.contains('is-open')) { setOpen(false); button.focus(); }
+    });
+    // a page restored from the back button should not come back with the menu open
+    window.addEventListener('pageshow', () => setOpen(false));
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setupMenu);
+  else setupMenu();
 })();

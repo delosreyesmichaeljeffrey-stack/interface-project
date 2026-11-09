@@ -1201,12 +1201,13 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
 
 /* ---------- Phone polish (inner pages) ---------- */
 @media (max-width: 560px) {
-  /* nav: brand on top, links share the row evenly with full-size tap targets */
-  .site-nav { padding: 8px 12px 10px; gap: 4px 12px; }
-  .site-nav nav { width: 100%; }
-  .site-nav nav ul { justify-content: space-between; gap: 4px; }
-  .site-nav nav li { flex: 1 1 auto; }
-  .site-nav nav a { justify-content: center; width: 100%; padding: 0 8px; font-size: 14px; }
+  /* nav: brand + burger on one row; the links drop down as a panel */
+  .site-nav { padding: 8px 12px; position: relative; }
+  .site-nav .nav-toggle { display: inline-flex; }
+  .nav-js .site-nav nav { display: none; width: 100%; flex-basis: 100%; }
+  .nav-js .site-nav.is-open nav { display: block; }
+  .nav-js .site-nav nav ul { flex-direction: column; gap: 4px; padding: 6px 0 4px; }
+  .nav-js .site-nav nav a { justify-content: flex-start; width: 100%; padding: 0 14px; font-size: 16px; }
 
   /* tighter gutters so cards use the screen */
   .page { padding: 20px 12px 0; }
@@ -1226,3 +1227,27 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
   /* keep inputs at 16px so iOS Safari does not zoom in on focus */
   input, select, textarea { font-size: 16px; }
 }
+
+/* burger button: only shown on phones (see the 560px block above) */
+.nav-toggle {
+  display: none; align-items: center; justify-content: center;
+  width: 44px; height: 44px; padding: 0;
+  background: transparent; color: var(--papel);
+  border: 2px solid rgba(246, 235, 211, 0.35); border-radius: 8px;
+  cursor: pointer;
+}
+.nav-toggle:hover { background: rgba(246, 235, 211, 0.12); }
+.nav-toggle:focus-visible { outline: 3px solid var(--sachet); outline-offset: 2px; }
+.nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after {
+  display: block; width: 20px; height: 2.5px; border-radius: 2px;
+  background: currentColor;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+.nav-toggle-bars { position: relative; }
+.nav-toggle-bars::before, .nav-toggle-bars::after { content: ""; position: absolute; left: 0; }
+.nav-toggle-bars::before { top: -7px; }
+.nav-toggle-bars::after { top: 7px; }
+.is-open .nav-toggle-bars { background: transparent; }
+.is-open .nav-toggle-bars::before { transform: translateY(7px) rotate(45deg); }
+.is-open .nav-toggle-bars::after { transform: translateY(-7px) rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) { .nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after { transition: none; } }
