@@ -1198,3 +1198,31 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
   .product .tag { padding: 2px 8px; font-size: 12px; }
   .filler.jar, .filler.box { width: 28px; }
 }
+
+/* ---------- Phone polish (inner pages) ---------- */
+@media (max-width: 560px) {
+  /* nav: brand on top, links share the row evenly with full-size tap targets */
+  .site-nav { padding: 8px 12px 10px; gap: 4px 12px; }
+  .site-nav nav { width: 100%; }
+  .site-nav nav ul { justify-content: space-between; gap: 4px; }
+  .site-nav nav li { flex: 1 1 auto; }
+  .site-nav nav a { justify-content: center; width: 100%; padding: 0 8px; font-size: 14px; }
+
+  /* tighter gutters so cards use the screen */
+  .page { padding: 20px 12px 0; }
+  .page-sign { margin-bottom: 28px; }
+  .paper { margin-bottom: 28px; }
+  .paper:not(.listahan) { padding: 20px 16px; }
+  .paper.listahan { padding-right: 16px; }
+  .price-board { padding-left: 16px; padding-right: 16px; }
+  .section-title { font-size: 22px; }
+
+  /* team tags: two columns, last one centered */
+  .team { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .team .member:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 6px); }
+  .member { padding: 24px 12px 16px; }
+  .member-name { font-size: 16px; }
+
+  /* keep inputs at 16px so iOS Safari does not zoom in on focus */
+  input, select, textarea { font-size: 16px; }
+}
