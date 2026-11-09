@@ -1251,3 +1251,16 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
 .is-open .nav-toggle-bars::before { transform: translateY(7px) rotate(45deg); }
 .is-open .nav-toggle-bars::after { transform: translateY(-7px) rotate(-45deg); }
 @media (prefers-reduced-motion: reduce) { .nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after { transition: none; } }
+
+/* sources list: a few short entries under Pinagkunan */
+.kwento-sources p + p { margin-top: 8px; font-size: 15px; line-height: 1.45; }
+
+/* a slot with a real photo in it (see assets/img/fieldwork/README.md) */
+.photo-slot.has-photo { display: block; padding: 0; background: none; border: 0; }
+.photo-slot.has-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.photo-credit { display: block; margin-top: 2px; font-size: 12px; line-height: 1.3; color: var(--muted); text-align: center; }
+
+.photo-credit a { color: inherit; text-decoration: underline; }
+.photo-caption .photo-credit { font-family: var(--font-body); }
+.credits-list { margin: 0 0 14px; padding-left: 20px; }
+.credits-list li { margin-bottom: 8px; font-size: 15px; overflow-wrap: anywhere; }

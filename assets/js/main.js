@@ -28,8 +28,8 @@ const stories = {
   sachet: {
     title: 'Sachet economy',
     critique: true,
-    lead: 'Paying more per gram, and the plastic waste left behind.',
-    body: 'Small packs make goods affordable today, but they often cost more per gram than buying in bulk, and every sachet becomes plastic waste.'
+    lead: 'Affordable today, plastic waste for a long time after.',
+    body: 'Small packs make goods affordable today, but the bigger pack can cost less per unit, and every sachet becomes plastic waste.'
   }
 };
 

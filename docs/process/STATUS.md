@@ -8,7 +8,7 @@ pages are working, and we are now filling in the content.
 - Built the website with HTML, CSS and JavaScript, hosted on GitHub Pages
 - Designed the site to look like a sari-sari store you look into through the rehas (grill window)
 - **Tindahan (Home):** a storefront with a hand-painted signboard, awning and shelves, where each product opens one of our five stories (Tingi, Utang, Tambayan, Signs & Labels, Sachet Economy)
-- **Paninda (Gallery):** all five stories plus a wall reserved for our fieldwork photos (empty until fieldwork is done)
+- **Paninda (Gallery):** all five stories plus a photo wall (openly licensed Wikimedia Commons photos with credits for now; our own fieldwork photos will be added)
 - A page for each story, styled like a page from the tindera's listahan
 - **Tungkol sa Tindahan (About):** the project, why we chose the sari-sari store, and the team
 - **Pabili! (Contact):** a contact form styled as an order slip that prints a receipt (prototype, sends nothing)
