@@ -18,6 +18,7 @@ with a critical angle on poverty, survival and the sachet economy.
 | 01 | Nov 2 | `01-moodboard-and-palette.html` | First moodboard (illustrated placeholders), color palette, typefaces | Ethan |
 | 02 | Nov 2 | `02-homepage-wireframe.html` | Low-fidelity homepage wireframe with 5 annotations (hover the top shelf) | Ethan / Michael |
 | 03 | Nov 9 | `03-site-screenshots.md` | Screenshots of every finished page with captions naming the element or principle used (`screenshots/03-…` to `12-…`) | Ethan |
+| 04 | Nov 15 | `04-storefront-v2.md` | Homepage reworked after our professor's feedback: a crowded tindahan with a pass-through window, with before/after and captions (`screenshots/13-…` to `15-…`) | Michael |
 
 Screenshots of each step are in `screenshots/`. Open the `.html` files in any
 browser to see them live.

@@ -183,10 +183,11 @@ body::before {
           mask: radial-gradient(circle 12px at 24px 40px, transparent 98%, #000) 0 0 / 48px 100% repeat-x;
 }
 
-/* The store window, looked into through the rehas */
+/* The store window, looked into through the wire-mesh rehas */
 .window {
+  --s: 1; /* size of the drawn goods; smaller on phones */
   position: relative;
-  padding: 18px clamp(10px, 3vw, 28px) 8px;
+  padding: 0 clamp(10px, 3vw, 28px);
   isolation: isolate;
   background: #63452B;
   color: var(--papel);
@@ -195,38 +196,88 @@ body::before {
   overflow: hidden;
   scroll-margin-top: 16px;
 }
+/* darker toward the floor of the store */
+.window::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(#6B4A2E, #5A3D25);
+}
+/* shade under the awning */
+.window::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 60px; z-index: 2;
+  background: linear-gradient(rgba(20, 12, 6, 0.4), transparent);
+  pointer-events: none;
+}
+/* the bare bulb's warm light on the goods */
+.window-light {
+  position: absolute; inset: 0; z-index: 2;
+  background: radial-gradient(62% 58% at 50% 10%, rgba(242, 183, 5, 0.2), transparent 72%);
+  pointer-events: none;
+  transition: opacity 700ms ease-out;
+}
+.shutter-run .window-light { opacity: 0; }
 
-.sachet-strip {
-  display: flex; justify-content: space-between; gap: 4px;
-  padding: 0 4px 10px;
-  border-top: 3px solid var(--kahoy);
+/* Drawn goods: every item is an SVG reused from the sprite at the top of index.html.
+   --w is the drawing's own width, --s the store's scale, --k a local scale. */
+.sprite { position: absolute; }
+.g {
+  display: block; flex: none;
+  width: calc(var(--w) * var(--s, 1) * var(--k, 1) * 1px); height: auto;
 }
-.sachet-strip span {
-  flex: 1;
-  height: 32px; max-width: 30px;
-  background: var(--sachet);
-  border: 2px solid var(--kahoy);
-  border-top: 0;
-  border-radius: 0 0 4px 4px;
+.c-red { color: var(--karatula); }
+.c-yellow { color: var(--sachet); }
+.c-teal { color: var(--pintura); }
+.c-cream { color: var(--papel); }
+.c-dark { color: #4A2E1C; }
+
+/* Goods hanging across the top: sachet ribbons inside, chichirya and tarps
+   clipped to the outside of the grill (closer to you, so they move more) */
+.hangers {
+  position: relative;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 4px;
+  --k: 0.86;
+  height: calc(66px * var(--s));
+  border-top: 4px solid var(--kahoy);
 }
-.sachet-strip span { transform-origin: top center; }
-.sachet-strip span:hover { animation: swing 1100ms var(--ease-out); }
+.hang {
+  position: relative; flex: none;
+  transform-origin: 50% 0;
+  translate: calc(var(--px, 0) * 3px) 0;
+  filter: saturate(0.8) brightness(0.86);
+}
+.hang--front {
+  z-index: 4;
+  translate: calc(var(--px, 0) * 9px) calc(var(--py, 0) * 3px);
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.35));
+}
+.hang:hover { animation: swing 1100ms var(--ease-out); }
 @keyframes swing {
-  15% { transform: rotate(16deg); }
-  35% { transform: rotate(-11deg); }
-  55% { transform: rotate(6deg); }
-  75% { transform: rotate(-3deg); }
+  15% { rotate: 16deg; }
+  35% { rotate: -11deg; }
+  55% { rotate: 6deg; }
+  75% { rotate: -3deg; }
 }
-.sachet-strip span:nth-child(3n+2) { background: var(--karatula); }
-.sachet-strip span:nth-child(3n) { background: var(--pintura); }
+@keyframes sway {
+  from { rotate: -1.6deg; }
+  to { rotate: 1.8deg; }
+}
+.tarp {
+  padding: 5px 10px 6px;
+  border: 2px solid var(--kahoy); border-radius: 2px;
+  font-family: var(--font-sign); font-size: 13px; line-height: 1.1; text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+}
+.tarp--load { background: var(--sachet); color: var(--kahoy); }
+.tarp--yelo { background: var(--paper-light); color: var(--pintura); }
+.bulb { width: calc(20px * var(--s)); filter: none; }
+.bulb svg { display: block; width: 100%; height: auto; }
 
 .cardboard-sign {
-  position: absolute; right: clamp(12px, 4vw, 40px); top: calc(50% + 4px); z-index: 4;
+  position: absolute; left: calc(50% + 96px); bottom: calc(96px * var(--s)); z-index: 4;
   padding: 6px 12px;
   background: #D9B98A; color: var(--kahoy);
   border: 2px solid var(--plywood);
-  font-family: var(--font-hand); font-size: clamp(16px, 2.6vw, 22px); line-height: 1.05;
-  transform: rotate(4deg);
+  font-family: var(--font-hand); font-size: 18px; line-height: 1.05;
+  transform: rotate(3deg);
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.35);
   pointer-events: none;
 }
@@ -235,55 +286,107 @@ body::before {
   position: relative;
   display: flex; align-items: flex-end; justify-content: space-between;
   gap: clamp(4px, 1.4vw, 14px);
-  min-height: 146px;
-  padding: 14px clamp(4px, 2vw, 18px) 6px;
+  min-height: 150px;
+  padding: 8px clamp(4px, 2vw, 18px) 6px;
   border-bottom: 12px solid var(--plywood);
   box-shadow: 0 10px 12px -6px rgba(0, 0, 0, 0.5);
   margin-bottom: 18px;
-  transform: translate(calc(var(--px, 0) * -2px), calc(var(--py, 0) * -1px));
-  transition: transform 300ms var(--ease-out);
 }
 /* the shelf's top surface, seen from slightly above: wide at the front edge,
    narrower where it meets the back wall (lines converge = perspective) */
 .shelf::before {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; z-index: 0;
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0;
   height: 16px;
   background: linear-gradient(#6E5034, #A3825C);
   clip-path: polygon(0 100%, 100% 100%, 97% 0, 3% 0);
 }
-.shelf > * { position: relative; z-index: 1; }
+/* a rail of the grill runs along the shelf line, never across a name tag */
+.shelf::after {
+  content: ""; position: absolute; left: -40px; right: -40px; top: calc(100% + 15px); z-index: 3;
+  height: 6px;
+  background: rgba(43, 29, 20, 0.72);
+  pointer-events: none;
+}
+/* each shelf is three columns: goods on the left, the centre (Utang on the
+   top shelf, the pass-through window on the bottom one), goods on the right */
+.shelf--three, .shelf--hatch { display: grid; grid-template-columns: 1fr auto 1fr; }
+.shelf--hatch { margin-bottom: 0; }
+.shelf--hatch::after { content: none; }
+.shelf-side {
+  position: relative;
+  display: flex; align-items: flex-end; justify-content: space-around;
+  gap: clamp(4px, 1.4vw, 14px);
+  min-width: 0;
+}
 
-/* Products that open a story */
+/* behind the front row: a back row on the shelf, and a narrow inner shelf
+   higher up. Both are smaller and darker, so they read as further away. */
+.shelf-top {
+  --k: 0.72;
+  position: absolute; left: 4%; right: 4%; bottom: calc(76px * var(--s));
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 2px;
+  border-bottom: 5px solid #4A3320;
+  overflow: hidden;
+  filter: brightness(0.5) saturate(0.55);
+  translate: calc(var(--px, 0) * -4px) 0;
+  transition: translate 300ms var(--ease-out);
+  pointer-events: none;
+}
+.shelf-side > .shelf-top { left: 0; right: 0; }
+.shelf-back {
+  --k: 0.92;
+  position: absolute; left: 3%; right: 3%; bottom: 16px;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 2px;
+  overflow: hidden;
+  filter: brightness(0.62) saturate(0.6);
+  translate: calc(var(--px, 0) * -3px) 0;
+  transition: translate 300ms var(--ease-out);
+  pointer-events: none;
+}
+.shelf-side > .shelf-back { left: 0; right: 0; bottom: 10px; }
+
+/* Products that open a story. The drawing is behind the grill; its name tag
+   is clipped to the front of the grill so it is always readable. */
 .product {
-  position: relative; z-index: 2;
+  position: relative;
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   flex: none;
   padding: 8px 6px 8px;
   background: none; border: 0; border-radius: 10px;
   font: inherit; color: inherit; cursor: pointer;
-  transition: transform 220ms var(--ease-out), background-color 220ms var(--ease-out);
+  transition: background-color 220ms var(--ease-out);
 }
+.product::before {
+  content: ""; position: absolute; left: 50%; top: 0; z-index: 0;
+  width: 150%; aspect-ratio: 1; translate: -50% -12%;
+  background: radial-gradient(closest-side, rgba(242, 183, 5, 0.3), transparent);
+  pointer-events: none;
+}
+.product > svg { position: relative; }
 .product svg {
-  width: clamp(60px, 8vw, 86px); height: auto; display: block;
+  width: clamp(56px, 7vw, 76px); height: auto; display: block;
   filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.35));
+  transition: translate 220ms var(--ease-out), scale 220ms var(--ease-out), opacity 120ms linear;
 }
 .product .tag {
+  position: relative; z-index: 4;
   padding: 3px 12px;
   background: var(--papel); color: var(--kahoy);
   border: 2px solid var(--kahoy); border-radius: 999px;
   font-weight: 800; font-size: clamp(12px, 1.8vw, 15px); white-space: nowrap;
+  transition: background-color 220ms var(--ease-out);
 }
-.product:hover, .product:focus-visible {
-  transform: translateY(-8px);
-  background: rgba(242, 183, 5, 0.2);
-}
+.product:hover, .product:focus-visible { background: rgba(242, 183, 5, 0.2); }
+.product:hover svg, .product:focus-visible svg { translate: 0 -8px; }
 .product:hover .tag, .product:focus-visible .tag { background: var(--sachet); }
-.product:active { transform: translateY(-4px) scale(0.96); transition-duration: 80ms; }
+.product:active svg { translate: 0 -4px; scale: 0.96; transition-duration: 80ms; }
 .product:focus-visible { outline: 3px solid var(--papel); outline-offset: 2px; }
+/* picked: the drawing has left the shelf (it is at the window, then in the story) */
+.product.is-away svg { opacity: 0; transition: none; }
 
 /* "Nabili na" stamp on stories already read */
 .stamp {
-  position: absolute; top: 2px; right: -8px;
+  position: absolute; top: 2px; right: -8px; z-index: 4;
   display: none;
   padding: 1px 6px;
   background: rgba(251, 245, 232, 0.92); color: var(--karatula);
@@ -294,80 +397,43 @@ body::before {
 .product.is-read .stamp { display: block; }
 .product.stamp-pending .stamp { opacity: 0; }
 
-/* Non-interactive stock, stacked in tight clusters like a real tindahan,
-   smaller and duller so the five stories stand out */
-.stock { display: flex; align-items: flex-end; gap: 3px; flex: none; }
-.filler {
-  display: block; flex: none;
-  opacity: 0.8;
-  filter: saturate(0.55) brightness(0.85);
-}
-.filler.can {
-  width: 26px; height: 40px;
-  background: var(--sachet); border: 2px solid var(--kahoy); border-radius: 4px;
-  box-shadow: inset 0 10px 0 var(--papel);
-}
-.filler.can--red { background: var(--karatula); }
-.filler.can--teal { background: var(--pintura); }
-.filler.jar {
+/* Other stock, packed in tight clusters like a real tindahan,
+   duller than the five stories so those stand out */
+.stock {
   position: relative;
-  width: 34px; height: 46px;
-  background: rgba(251, 245, 232, 0.85);
-  border: 2px solid var(--kahoy); border-radius: 10px 10px 6px 6px;
-  box-shadow: inset 0 -20px 0 rgba(242, 183, 5, 0.75);
-}
-.filler.jar::before {
-  content: ""; position: absolute; left: 5px; right: 5px; top: -8px; height: 8px;
-  background: var(--pintura); border: 2px solid var(--kahoy); border-radius: 3px;
-}
-.filler.jar--red { box-shadow: inset 0 -20px 0 rgba(184, 56, 42, 0.8); }
-.filler.box {
-  width: 36px; height: 42px;
-  background: var(--karatula); border: 2px solid var(--kahoy); border-radius: 3px;
-  box-shadow: inset 0 12px 0 var(--papel);
-}
-.filler.box--teal { background: var(--pintura); }
-.filler.box--yellow { background: var(--sachet); }
-.filler.bottle {
-  width: 16px; height: 54px;
-  background: var(--pintura); border: 2px solid var(--kahoy);
-  border-radius: 8px 8px 3px 3px;
-}
-.filler.bottle--red { background: var(--karatula); }
-.filler.bottle--yellow { background: var(--sachet); }
-.filler.pack {
-  width: 30px; height: 34px;
-  background: var(--sachet); border: 2px solid var(--kahoy); border-radius: 2px 2px 6px 6px;
-  box-shadow: inset 0 -8px 0 var(--karatula);
-}
-.filler.pack--teal { background: var(--pintura); }
-
-/* darker toward the floor of the store */
-.window::before {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(#6B4A2E, #5A3D25);
+  --k: 1.1;
+  display: flex; align-items: flex-end; gap: 3px; flex: none;
+  filter: saturate(0.6) brightness(0.86);
 }
 
-/* The rehas: grill bars drawn over the shelves */
+/* The rehas: a welded frame with wire mesh, in front of the goods */
 .rehas {
+  /* the frame's two uprights stand either side of the pass-through window;
+     the products sit in the columns beside them, so no bar crosses a drawing */
+  --post: calc(66px * var(--s) + 9px);
   position: absolute; inset: 0 -10px; z-index: 3;
   pointer-events: none;
   background:
-    repeating-linear-gradient(90deg, transparent 0 calc(12.5% - 5px), rgba(43, 29, 20, 0.6) calc(12.5% - 5px) 12.5%);
-  border-top: 5px solid rgba(43, 29, 20, 0.6);
-  transform: translate(calc(var(--px, 0) * 7px), calc(var(--py, 0) * 3px));
-  transition: transform 300ms var(--ease-out);
+    linear-gradient(90deg,
+      transparent calc(50% - var(--post) - 3px), rgba(43, 29, 20, 0.72) 0 calc(50% - var(--post) + 3px),
+      transparent 0 calc(50% + var(--post) - 3px), rgba(43, 29, 20, 0.72) 0 calc(50% + var(--post) + 3px), transparent 0),
+    repeating-linear-gradient(90deg, transparent 0 12px, rgba(246, 235, 211, 0.1) 12px 13px),
+    repeating-linear-gradient(0deg, transparent 0 12px, rgba(246, 235, 211, 0.1) 12px 13px);
+  border-top: 5px solid rgba(43, 29, 20, 0.72);
+  translate: calc(var(--px, 0) * 5px) calc(var(--py, 0) * 2px);
+  transition: translate 300ms var(--ease-out);
 }
-/* the grill's shadow falls a little to the side, on the goods behind it */
+/* the frame's shadow falls a little to the side, on the goods behind it */
 .rehas::before {
   content: ""; position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg, transparent 0 calc(12.5% - 6px), rgba(0, 0, 0, 0.16) calc(12.5% - 6px) 12.5%);
-  transform: translateX(11px);
+  background: linear-gradient(90deg,
+    transparent calc(50% - var(--post) - 3px), rgba(0, 0, 0, 0.16) 0 calc(50% - var(--post) + 4px),
+    transparent 0 calc(50% + var(--post) - 3px), rgba(0, 0, 0, 0.16) 0 calc(50% + var(--post) + 4px), transparent 0);
+  transform: translateX(12px);
   filter: blur(2px);
 }
 
-/* Inside the window: the side walls angle back toward the back wall,
-   and the awning shades the top */
+/* Inside the window: the side walls angle back toward the back wall */
 .window-walls {
   position: absolute; inset: 0; z-index: 0;
   pointer-events: none;
@@ -381,34 +447,95 @@ body::before {
   right: 0; background: linear-gradient(270deg, #3E2A1A, #57391F);
   clip-path: polygon(0 22px, 100% 0, 100% 100%, 0 calc(100% - 10px));
 }
-.window::after {
-  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 70px; z-index: 2;
-  background: linear-gradient(rgba(20, 12, 6, 0.55), transparent);
-  pointer-events: none;
-}
-.sachet-strip { position: relative; }
-.sachet-strip, .shelf { z-index: 1; }
 
-/* Counter where the tindera greets you and keeps your listahan */
+/* The pass-through window: the opening in the grill, right above the ledge,
+   where payment goes in and goods come out */
+.hatch {
+  position: relative; z-index: 4;
+  align-self: end;
+  width: calc(132px * var(--s));
+  margin: 0 clamp(2px, 1.2vw, 14px) -18px;
+}
+.hatch-hole {
+  position: relative;
+  height: calc(108px * var(--s));
+  background: radial-gradient(120% 100% at 50% 0, #2E1D12, #150C06);
+  border: 6px solid var(--muted-light); border-radius: 4px;
+  outline: 3px solid var(--kahoy);
+  box-shadow: inset 0 12px 16px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+.hatch-tray {
+  display: block; height: 12px; margin: 3px -8px 0;
+  background: linear-gradient(#A3825C, #7E5E3D);
+  border: 3px solid var(--kahoy); border-radius: 3px;
+}
+/* the tindera's hand rests at the top of the opening */
+.hatch-hand { --k: 1.15; position: absolute; left: 50%; top: 0; translate: -50% -34%; }
+.hatch-item { position: absolute; left: 50%; bottom: 3px; width: 54%; translate: -50% 0; }
+.hatch-item svg { display: block; width: 100%; height: auto; max-height: calc(80px * var(--s)); }
+/* your piso: it starts on the ledge and goes in through the opening */
+.hatch-coin { --k: 1.15; position: absolute; left: 50%; bottom: 6px; z-index: 1; translate: -50% 0; opacity: 0; }
+.hatch-note {
+  position: absolute; left: 50%; bottom: calc(100% + 6px); z-index: 1;
+  padding: 1px 8px;
+  background: var(--sachet); color: var(--kahoy);
+  border: 2px solid var(--kahoy);
+  font-family: var(--font-hand); font-size: 17px; line-height: 1.2; white-space: nowrap;
+  translate: -50% 0; rotate: -2deg;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+}
+/* the drawing while it travels from the shelf to the window */
+.pick-ghost {
+  position: fixed; z-index: 20; margin: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* The ledge and the painted wall under the window */
 .counter {
   position: relative;
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 8px 24px; flex-wrap: wrap;
-  padding: 22px clamp(16px, 3vw, 28px) 16px;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  gap: 10px 20px;
+  padding: 30px clamp(14px, 3vw, 28px) 18px;
   background: linear-gradient(var(--counter), #5C3F27);
-  border: 6px solid var(--kahoy); border-top: 0;
+  border: 6px solid var(--kahoy); border-top: 0; border-bottom: 0;
   color: var(--papel);
 }
-/* the counter top, seen from above, sticks out past the window frame */
+/* the ledge, seen from above, sticks out past the window frame */
 .counter::before {
   content: ""; position: absolute; left: -16px; right: -16px; top: -12px; height: 18px;
   background: linear-gradient(#A3825C, #7E5E3D);
   border: 3px solid var(--kahoy); border-radius: 3px;
   clip-path: polygon(1.6% 0, 98.4% 0, 100% 100%, 0 100%);
 }
-.greeting { margin: 0; font-family: var(--font-hand); font-size: clamp(26px, 4.5vw, 36px); line-height: 1.1; }
-.progress { display: flex; align-items: center; gap: 12px; margin: 0; font-weight: 700; font-size: 16px; }
-.progress p { margin: 0; }
+/* the listahan lies on the ledge beside the window */
+.ledge-listahan { position: absolute; left: calc(50% + 92px * var(--s, 1)); top: -22px; z-index: 1; }
+/* hand-painted advertising on the wall */
+.wall-ad {
+  justify-self: start; margin: 0;
+  font-family: var(--font-sign); font-size: clamp(15px, 2vw, 21px); line-height: 1.05;
+  color: var(--papel); text-shadow: 2px 2px 0 var(--kahoy);
+  transform: rotate(-2deg);
+}
+/* what the tindera says, coming from the window above */
+.greeting {
+  position: relative; grid-column: 2;
+  justify-self: center; margin: 0;
+  max-width: 15em; padding: 6px 18px 9px;
+  background: var(--paper-light); color: var(--kahoy);
+  border: 3px solid var(--kahoy); border-radius: 18px;
+  font-family: var(--font-hand); font-size: clamp(24px, 3.4vw, 31px); line-height: 1.1; text-align: center;
+}
+.greeting::before {
+  content: ""; position: absolute; left: 50%; top: -11px;
+  width: 16px; height: 16px; margin-left: -8px;
+  background: var(--paper-light);
+  border: 3px solid var(--kahoy); border-right: 0; border-bottom: 0;
+  transform: rotate(45deg);
+}
+.progress { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 12px; margin: 0; font-weight: 700; font-size: 16px; }
+.progress p { margin: 0; white-space: nowrap; }
 
 /* five little sachets that fill in as stories are read */
 .tokens { display: flex; gap: 6px; }
@@ -424,6 +551,61 @@ body::before {
 .tokens i.is-read:nth-child(5) { background: var(--karatula); }
 .progress strong { font-family: var(--font-sign); font-weight: 400; color: var(--sachet); font-size: 24px; line-height: 1; }
 
+/* Street level: the foot of the wall and the ground in front of the store */
+.street {
+  --s: 1;
+  position: relative;
+  display: flex; align-items: flex-end; gap: clamp(8px, 2.5vw, 28px);
+  height: calc(118px * var(--s));
+  padding: 0 clamp(10px, 3vw, 30px) 10px;
+  background: linear-gradient(#5C3F27 0 calc(100% - 30px), #A99B82 calc(100% - 30px));
+  border: 6px solid var(--kahoy); border-top: 0;
+}
+.street-crates { display: flex; flex-direction: column-reverse; align-items: center; gap: 0; }
+.street-crates .g:last-child { margin-bottom: -4px; rotate: -2deg; }
+.street-bench { position: relative; margin-left: auto; }
+.street-halaman { align-self: flex-end; }
+.pusa { position: absolute; left: 14%; bottom: calc(100% - 9px * var(--s)); width: calc(84px * var(--s)); height: auto; }
+.pusa-tail { transform-box: fill-box; transform-origin: 0 100%; }
+@keyframes tail-flick {
+  0%, 82%, 100% { rotate: 0deg; }
+  88% { rotate: -14deg; }
+  94% { rotate: 6deg; }
+}
+@keyframes glow {
+  from { opacity: 0.82; }
+  to { opacity: 1; }
+}
+
+/* Quiet background motion, only while the store is on screen (main.js adds
+   .is-ambient) and only for visitors who have not asked for less motion */
+@media (prefers-reduced-motion: no-preference) {
+  .is-ambient .hang { animation: sway 6s ease-in-out infinite alternate; }
+  .is-ambient .hang:nth-child(3n) { animation-duration: 7.3s; animation-delay: -2s; }
+  .is-ambient .hang:nth-child(3n+1) { animation-duration: 5.2s; animation-delay: -3.5s; }
+  .is-ambient .hang:hover { animation: swing 1100ms var(--ease-out); }
+  .is-ambient .window-light { animation: glow 4.6s ease-in-out infinite alternate; }
+  .is-ambient .pusa-tail { animation: tail-flick 7s ease-in-out infinite; }
+}
+
+/* narrower windows: the goods beside the pass-through window give way first */
+@media (max-width: 1040px) {
+  .shelf--hatch .stock--wide, .cardboard-sign { display: none; }
+}
+@media (max-width: 900px) {
+  .shelf .filler--wide, .shelf--three .stock--wide { display: none; }
+  .counter { grid-template-columns: 1fr 1fr; }
+  .greeting { grid-column: 1 / -1; }
+  .progress { grid-column: 2; }
+}
+@media (max-width: 760px) {
+  .shelf--hatch .stock, .hangers .hide-s { display: none; }
+}
+@media (max-width: 640px) {
+  /* long names wrap so the two bottom products fit beside the window */
+  .shelf--hatch .tag { white-space: normal; max-width: 9.5ch; padding: 3px 8px; border-radius: 12px; line-height: 1.1; text-align: center; }
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {
@@ -434,6 +616,8 @@ body::before {
 }
 .site-footer p { margin: 4px 0; }
 .site-footer strong { font-family: var(--font-sign); font-weight: 400; color: var(--papel); }
+.site-footer a { color: var(--papel); text-underline-offset: 3px; }
+.site-footer a:hover { color: var(--sachet); }
 
 /* ---------- Story: a page from the listahan ---------- */
 
@@ -1012,12 +1196,12 @@ a.story-step {
 html[data-vt-scrolled] .site-nav { view-transition-name: none; }
 
 /* Only the drawing of the story being opened or left travels (html[data-vt-art]). */
-html[data-vt-art="tingi"] :is(.product[data-story="tingi"]:not(.is-lifted) svg, .story[open] #story-art[data-story="tingi"] svg, .item[data-story="tingi"] .item-shelf svg, .kwento--tingi .story-art svg) { view-transition-name: art-tingi; }
-html[data-vt-art="utang"] :is(.product[data-story="utang"]:not(.is-lifted) svg, .story[open] #story-art[data-story="utang"] svg, .item[data-story="utang"] .item-shelf svg, .kwento--utang .story-art svg) { view-transition-name: art-utang; }
-html[data-vt-art="tambayan"] :is(.product[data-story="tambayan"]:not(.is-lifted) svg, .story[open] #story-art[data-story="tambayan"] svg, .item[data-story="tambayan"] .item-shelf svg, .kwento--tambayan .story-art svg) { view-transition-name: art-tambayan; }
-html[data-vt-art="signs"] :is(.product[data-story="signs"]:not(.is-lifted) svg, .story[open] #story-art[data-story="signs"] svg, .item[data-story="signs"] .item-shelf svg, .kwento--signs .story-art svg) { view-transition-name: art-signs; }
-html[data-vt-art="sachet"] :is(.product[data-story="sachet"]:not(.is-lifted) svg, .story[open] #story-art[data-story="sachet"] svg, .item[data-story="sachet"] .item-shelf svg, .kwento--sachet .story-art svg) { view-transition-name: art-sachet; }
-html[data-vt-art] :is(.product, .story, .item, .kwento) svg { view-transition-class: art; }
+html[data-vt-art="tingi"] :is(.product[data-story="tingi"]:not(.is-lifted) svg, .hatch-item[data-story="tingi"] svg, .story[open] #story-art[data-story="tingi"] svg, .item[data-story="tingi"] .item-shelf svg, .kwento--tingi .story-art svg) { view-transition-name: art-tingi; }
+html[data-vt-art="utang"] :is(.product[data-story="utang"]:not(.is-lifted) svg, .hatch-item[data-story="utang"] svg, .story[open] #story-art[data-story="utang"] svg, .item[data-story="utang"] .item-shelf svg, .kwento--utang .story-art svg) { view-transition-name: art-utang; }
+html[data-vt-art="tambayan"] :is(.product[data-story="tambayan"]:not(.is-lifted) svg, .hatch-item[data-story="tambayan"] svg, .story[open] #story-art[data-story="tambayan"] svg, .item[data-story="tambayan"] .item-shelf svg, .kwento--tambayan .story-art svg) { view-transition-name: art-tambayan; }
+html[data-vt-art="signs"] :is(.product[data-story="signs"]:not(.is-lifted) svg, .hatch-item[data-story="signs"] svg, .story[open] #story-art[data-story="signs"] svg, .item[data-story="signs"] .item-shelf svg, .kwento--signs .story-art svg) { view-transition-name: art-signs; }
+html[data-vt-art="sachet"] :is(.product[data-story="sachet"]:not(.is-lifted) svg, .hatch-item[data-story="sachet"] svg, .story[open] #story-art[data-story="sachet"] svg, .item[data-story="sachet"] .item-shelf svg, .kwento--sachet .story-art svg) { view-transition-name: art-sachet; }
+html[data-vt-art] :is(.product, .hatch-item, .story, .item, .kwento) svg { view-transition-class: art; }
 
 ::view-transition-group(*) {
   animation-duration: 480ms;
@@ -1053,6 +1237,13 @@ html.vt-dialog::view-transition-new(root) { animation: vt-fade-in 240ms ease-out
 ::view-transition-new(story-sheet):only-child { animation: sheet-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 ::view-transition-old(story-sheet):only-child { animation: sheet-out 220ms ease-in both; }
 @keyframes sheet-in { from { opacity: 0; transform: translateY(28px) scale(0.98); } }
+/* bought through the pass-through window: the story page grows out of it
+   (main.js sets --sheet-ox/--sheet-oy to the window's place on the page) */
+html.vt-hatch::view-transition-new(story-sheet):only-child {
+  transform-origin: var(--sheet-ox, 50%) var(--sheet-oy, 100%);
+  animation: sheet-from-hatch 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes sheet-from-hatch { from { opacity: 0.2; transform: scale(0.1); } }
 @keyframes sheet-out { to { opacity: 0; transform: translateY(18px) scale(0.98); } }
 
 /* ----- Turning to the next or previous story -----
@@ -1138,8 +1329,9 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
   @view-transition { navigation: none; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
   .shutter-run .shutter { display: none; }
-  .rehas, .shelf { transform: none; transition: none; }
-  .sachet-strip span:hover, .member:hover { animation: none; }
+  .rehas, .hang, .shelf-back { translate: none; transition: none; }
+  .hang:hover, .member:hover { animation: none; }
+  .product svg { transition: none; }
   .page-sign--hanging { animation: none; transform: rotate(-1deg); }
   .tokens i { transition: none; }
   .chip span { transition: none; }
@@ -1155,13 +1347,17 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
 }
 
 @media (max-width: 560px) {
-  .cardboard-sign, .filler--wide, .stock--wide { display: none; }
-  .shelf .stock:not(:first-child) { display: none; }
-  .shelf { justify-content: space-around; }
-  .rehas { background: repeating-linear-gradient(90deg, transparent 0 calc(16.66% - 4px), rgba(43, 29, 20, 0.5) calc(16.66% - 4px) 16.66%); }
+  /* a narrower store: smaller goods, fewer of them, the five stories stay large */
+  .window, .street { --s: 0.74; }
+  .cardboard-sign, .tarp, .hide-s, .filler--wide, .stock--wide, .wall-ad, .ledge-listahan, .street-sako, .street-halaman { display: none; }
+  .stock { --k: 1; }
+  .shelf--three .stock { display: none; }
+  .shelf { min-height: 138px; }
+  .shelf-side { gap: 0; }
   .rehas::before { display: none; }
-  .sachet-strip span:nth-child(n+11) { display: none; }
-  .shelf { min-height: 150px; }
+  .hatch-note { font-size: 16px; }
+  .counter { grid-template-columns: 1fr; justify-items: center; padding-top: 28px; }
+  .greeting, .progress { grid-column: 1; justify-self: center; }
   .price-row { grid-template-columns: 1fr; }
 
   /* the story becomes a bottom sheet within thumb reach */
@@ -1193,10 +1389,10 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
 @media (max-width: 420px) {
   .shelf--three .stock { display: none; }
   .shelf { gap: 2px; padding-left: 0; padding-right: 0; }
+  .hatch { margin-left: 0; margin-right: 0; }
   .product { padding: 6px 2px; }
   .product svg { width: 52px; }
   .product .tag { padding: 2px 8px; font-size: 12px; }
-  .filler.jar, .filler.box { width: 28px; }
 }
 
 /* ---------- Phone polish (inner pages) ---------- */

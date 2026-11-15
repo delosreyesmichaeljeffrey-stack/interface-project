@@ -1,6 +1,6 @@
-// Storefront: lifts the shutter on the first visit, opens the story behind
-// each product, lets readers step through all five, and keeps a listahan of
-// the stories already read.
+// Storefront: lifts the shutter on the first visit, passes each picked product
+// out through the store's little window, opens its story, lets readers step
+// through all five, and keeps a listahan of the stories already read.
 
 const order = ['tingi', 'utang', 'tambayan', 'signs', 'sachet'];
 
@@ -96,6 +96,13 @@ if (root.classList.contains('shutter-run')) {
     .then(() => root.classList.add('shutter-go'));
   shutter.addEventListener('animationend', () => {
     root.classList.remove('shutter-run', 'shutter-go');
+    // the five story products hop one after another: these are the ones to pick
+    order.forEach((id, index) => {
+      buttons.get(id).querySelector('svg').animate(
+        [{ translate: '0 0' }, { translate: '0 -16px', offset: 0.4 }, { translate: '0 0' }],
+        { duration: 460, delay: 250 + index * 90, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+      );
+    });
   }, { once: true });
   // In a hurry? A click lifts it straight away.
   shutter.addEventListener('click', () => {
@@ -105,10 +112,11 @@ if (root.classList.contains('shutter-run')) {
 }
 try { sessionStorage.setItem('tingi-opened', 'yes'); } catch (error) { /* ignore */ }
 
-/* ---------- Depth: the grill drifts a little as the pointer moves ---------- */
+/* ---------- Depth: the store's layers drift as the pointer moves ---------- */
 
-// Things closer to you move more than things further away. The rehas (front)
-// moves most, the shelves (behind it) a little the other way.
+// Things closer to you move more than things further away: the goods clipped
+// to the outside of the grill move most, then the grill, and the back row of
+// each shelf moves a little the other way. The CSS reads --px and --py.
 const storeWindow = document.querySelector('.window');
 if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   let frame = 0;
@@ -131,6 +139,22 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     y = 0;
     if (!frame) frame = requestAnimationFrame(apply);
   });
+}
+
+/* ---------- Quiet background motion ---------- */
+
+// Hanging goods sway, the bulb's light breathes, the cat's tail flicks. The
+// CSS only runs these while .is-ambient is set, so they stop when the store is
+// scrolled away or the tab is hidden.
+const storefront = document.querySelector('.storefront');
+if ('IntersectionObserver' in window) {
+  let onScreen = false;
+  const setAmbient = () => storefront.classList.toggle('is-ambient', onScreen && !document.hidden);
+  new IntersectionObserver((entries) => {
+    onScreen = entries[0].isIntersecting;
+    setAmbient();
+  }).observe(storeWindow);
+  document.addEventListener('visibilitychange', setAmbient);
 }
 
 /* ---------- The listahan of read stories ---------- */
@@ -222,22 +246,120 @@ function fill(id) {
   saveRead();
 }
 
-// The product's own drawing travels from the shelf into the story.
-function open(id) {
+/* ---------- Buying through the pass-through window ---------- */
+
+const hatchHole = document.querySelector('.hatch-hole');
+const hatchSlot = document.querySelector('.hatch-item');
+const hatchHand = document.querySelector('.hatch-hand');
+const hatchCoin = document.querySelector('.hatch-coin');
+const easeOut = 'cubic-bezier(0.22, 1, 0.36, 1)';
+let busy = false;
+let purchases = 0;
+
+// Only worth playing when the reader can see the window (at least its top half).
+function hatchInView() {
+  const box = hatchHole.getBoundingClientRect();
+  return box.top >= 0 && box.top + box.height / 2 <= window.innerHeight;
+}
+
+// A coin goes in, the tindera takes the product off the shelf and pushes it
+// out onto the ledge. Resolves when the product is sitting in the window.
+function passThrough(id) {
   const button = buttons.get(id);
-  lastTrigger = button;
-  transition('vt-open', () => {
-    button.classList.add('is-lifted');
+  const drawing = button.querySelector('svg');
+  const from = drawing.getBoundingClientRect();
+  const to = hatchHole.getBoundingClientRect();
+  const pace = purchases++ ? 0.6 : 1; // the first purchase is shown in full; later ones are quicker
+
+  hatchCoin.animate(
+    [
+      { translate: '-50% 6px', scale: 1, opacity: 0 },
+      { translate: '-50% 0', scale: 1, opacity: 1, offset: 0.2 },
+      { translate: '-50% -30px', scale: 0.9, opacity: 1, offset: 0.7 },
+      { translate: '-50% -52px', scale: 0.6, opacity: 0 }
+    ],
+    { duration: 400 * pace, easing: 'ease-in-out' }
+  );
+  hatchHand.animate(
+    [
+      { translate: '-50% -34%' },
+      { translate: '-50% -6%', offset: 0.35 },
+      { translate: '-50% -72%', offset: 0.65 },
+      { translate: '-50% -34%' }
+    ],
+    { duration: 560 * pace, easing: 'ease-in-out' }
+  );
+
+  // a copy of the drawing flies from the shelf to the window
+  const ghost = drawing.cloneNode(true);
+  ghost.classList.add('pick-ghost');
+  Object.assign(ghost.style, {
+    left: from.left + 'px', top: from.top + 'px', width: from.width + 'px', height: from.height + 'px'
+  });
+  document.body.append(ghost);
+  button.classList.add('is-away');
+
+  const size = Math.min(1, (to.width * 0.54) / from.width, (to.height * 0.74) / from.height);
+  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+  const dy = to.bottom - 9 - (from.height * size) / 2 - (from.top + from.height / 2);
+  return ghost.animate(
+    [
+      { transform: 'none' },
+      { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 26}px) scale(${(1 + size) / 2}) rotate(-6deg)`, offset: 0.5 },
+      { transform: `translate(${dx}px, ${dy}px) scale(${size})` }
+    ],
+    { duration: 400 * pace, delay: 150 * pace, easing: 'cubic-bezier(0.45, 0, 0.25, 1)', fill: 'both' }
+  ).finished.then(() => {
+    // the drawing now sits in the window; from there it travels into the story
+    hatchSlot.dataset.story = id;
+    hatchSlot.replaceChildren(drawing.cloneNode(true));
+    button.classList.add('is-lifted'); // only the copy in the window may travel into the story
+    ghost.remove();
+  });
+}
+
+// Opens the story. `fromHatch` makes the page grow out of the window.
+function showStory(id, fromHatch) {
+  const button = buttons.get(id);
+  if (fromHatch) root.classList.add('vt-hatch');
+  return transition('vt-open', () => {
+    button.classList.add('is-lifted', 'is-away');
     fill(id);
     dialog.showModal();
-  }, id).then(renderRead);
+    if (fromHatch) {
+      const hole = hatchHole.getBoundingClientRect();
+      const sheet = dialog.getBoundingClientRect();
+      root.style.setProperty('--sheet-ox', hole.left + hole.width / 2 - sheet.left + 'px');
+      root.style.setProperty('--sheet-oy', hole.top + hole.height / 2 - sheet.top + 'px');
+      hatchSlot.replaceChildren();
+      delete hatchSlot.dataset.story;
+    }
+  }, id).then(() => {
+    root.classList.remove('vt-hatch');
+    renderRead();
+  });
+}
+
+// Picking a product: through the window when it can be seen and motion is
+// allowed, otherwise straight from the shelf into the story.
+function open(id) {
+  if (busy || dialog.open) return;
+  lastTrigger = buttons.get(id);
+  if (reduceMotion.matches || !document.startViewTransition || !hatchInView()) {
+    showStory(id, false);
+    return;
+  }
+  busy = true;
+  passThrough(id)
+    .then(() => showStory(id, true))
+    .finally(() => { busy = false; });
 }
 
 // Stepping to another story turns the page, left or right.
 function step(id, direction) {
   transition('vt-' + direction, () => {
-    buttons.get(current).classList.remove('is-lifted');
-    buttons.get(id).classList.add('is-lifted');
+    buttons.get(current).classList.remove('is-lifted', 'is-away');
+    buttons.get(id).classList.add('is-lifted', 'is-away');
     fill(id);
   }).then(renderRead);
   lastTrigger = buttons.get(id);
@@ -249,7 +371,7 @@ function close() {
   const closing = current;
   transition('vt-close', () => {
     dialog.close();
-    buttons.forEach((button) => button.classList.remove('is-lifted'));
+    buttons.forEach((button) => button.classList.remove('is-lifted', 'is-away'));
   }, closing).then(() => celebrate(closing));
 }
 

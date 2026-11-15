@@ -12,14 +12,14 @@ The page-to-page transitions only play on the live site, in Chrome, Edge or Safa
 
 ## Structure
 
-- `index.html`: storefront homepage (store sign, rehas window, shelves, counter)
+- `index.html`: storefront homepage (signboard, hanging goods, packed shelves behind the rehas, pass-through window, ledge, street)
 - `paninda.html`: Paninda, the gallery of all five stories plus a wall for fieldwork photos
 - `kwento/`: one full page per story (`tingi`, `utang`, `tambayan`, `signs`, `sachet`); write the full stories and sources here
 - `tungkol.html`: Tungkol sa Tindahan, about the project and the team
 - `pabili.html`: Pabili!, contact form styled as an order slip (prototype, sends nothing)
 - `assets/css/style.css`: styles, palette and typography
 - `assets/js/site.js`: page-to-page transitions and arrow-key shortcuts between stories (loaded on every page)
-- `assets/js/main.js`: lifts the shutter on the first visit and opens each product's story
+- `assets/js/main.js`: lifts the shutter on the first visit, passes each picked product out through the store's window and opens its story
 - `assets/js/paninda.js`: stamps "Nabili na" on stories already read
 - `assets/js/kwento.js`: marks a story as read when its page is opened
 - `assets/js/pabili.js`: order slip validation and receipt
