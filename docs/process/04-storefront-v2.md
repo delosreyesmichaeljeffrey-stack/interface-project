@@ -16,8 +16,8 @@ Captured from the local files (Chrome headless). Images are in `screenshots/`.
 | Screenshot | `screenshots/03-site-home.png` | `screenshots/13-storefront-v2-desktop.png`, `screenshots/14-storefront-v2-phone.png` |
 | Shelves | Two tidy shelves with a few plain blocks | Two packed shelves, each with a back row and a narrow inner shelf behind it |
 | Goods | Plain coloured shapes | Drawn goods: sardinas, noodles, softdrinks, toyo/suka, garapon, eggs, soap (made-up labels, no real brands) |
-| Grill | Plain upright bars | Wire mesh in a welded frame, like the grill in `assets/img/fieldwork/rehas.jpg` |
-| Buying | The product jumped straight into its story | A piso goes in through the window, the tindera hands the product out, and the story comes out of the window |
+| Grill | Plain dark upright bars | A light wire grid in a pale frame, like the white grills on real stores (`assets/img/fieldwork/rehas.jpg`) |
+| Buying | The product jumped straight into its story | A piso goes in through the window, the tindera inside hands the product out, and the story comes out of the window |
 | Around the store | Signboard, awning, counter strip | Hanging sachets and chichirya, tarps, a bulb, a painted wall ad, and the street: bangko, cat, crates, gallon, rice sack, tsinelas |
 
 We used our reference photos in `assets/img/fieldwork/` (`storefront.jpg`,
@@ -29,11 +29,14 @@ under the awning and the lettering painted on the wall.
 
 ### The pass-through window — `screenshots/15-storefront-v2-buying.png`
 The opening in the grill sits at the bottom middle, right above the ledge, with
-the tindera's hand inside and a "Tao po? Kumatok lang." note above it. Picking a
-product plays a short purchase: the piso goes in, the product leaves its shelf
-and lands in the window, and the story page grows out of the window.
-**Emphasis**: the window is the one dark, framed shape in a busy scene, and the
-motion leads the eye to it. **Balance**: it is centred, with Utang above it and
+the tindera herself inside, in the lit store, and a "Tao po? Kumatok lang." note
+above it. (Our first try showed only a hand in a dark opening; it looked out of
+place, so we lit the inside and drew the tindera, as in real store photos.) Picking a
+product plays a short purchase: the piso goes in, she takes it, the product
+leaves its shelf and she holds it out, and the story page grows out of the
+window.
+**Emphasis**: the window is the one framed shape with a face in a busy scene,
+and the motion leads the eye to it. **Balance**: it is centred, with Utang above it and
 two products on each side.
 
 ### Crowded shelves — `screenshots/13-storefront-v2-desktop.png`
@@ -46,15 +49,16 @@ back wall. **Form**: cans, bottles, jars and packs are drawn as solid objects.
 **Proportion**: the five stories are the biggest, brightest things on the shelf.
 
 ### Hanging goods and the mesh grill
-Sachet ribbons, chichirya and saging hang across the top; the grill is a fine
-wire mesh with a frame.
+Sachet ribbons, chichirya and saging hang across the top, with more strips of
+sachets down both sides; the grill is a light wire grid in a pale frame.
 **Rhythm**: the repeated ribbons and the mesh's small squares. **Line**: the
 frame's two uprights stand either side of the window, and the rail runs along
 the shelf line, so no bar crosses a product or its name tag. **Texture**: mesh,
 plywood, painted concrete and plastic.
 
 ### Signs, wall and street
-"Load na dito", "May yelo & ice candy", "Bawal ang utang, bukas pwede." and
+"Load na dito", "Cash in · Cash out · Bills · E-load", "Ice candy for sale",
+"Bawal ang utang, bukas pwede." and
 the painted "Malamig na softdrinks" are the kind of hand-made signs our Signs &
 labels story is about. The tindera's "Ano po'ng sa inyo?" is now a speech bubble
 coming from the window. Below the ledge is the street: a bangko with a sleeping

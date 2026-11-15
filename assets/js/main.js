@@ -262,7 +262,7 @@ function hatchInView() {
   return box.top >= 0 && box.top + box.height / 2 <= window.innerHeight;
 }
 
-// A coin goes in, the tindera takes the product off the shelf and pushes it
+// A coin goes in, the tindera takes the product off the shelf and hands it
 // out onto the ledge. Resolves when the product is sitting in the window.
 function passThrough(id) {
   const button = buttons.get(id);
@@ -282,10 +282,10 @@ function passThrough(id) {
   );
   hatchHand.animate(
     [
-      { translate: '-50% -34%' },
-      { translate: '-50% -6%', offset: 0.35 },
-      { translate: '-50% -72%', offset: 0.65 },
-      { translate: '-50% -34%' }
+      { translate: '0 0' },
+      { translate: '0 14%', offset: 0.35 },
+      { translate: '0 -55%', offset: 0.65 },
+      { translate: '0 0' }
     ],
     { duration: 560 * pace, easing: 'ease-in-out' }
   );
@@ -299,9 +299,9 @@ function passThrough(id) {
   document.body.append(ghost);
   button.classList.add('is-away');
 
-  const size = Math.min(1, (to.width * 0.54) / from.width, (to.height * 0.74) / from.height);
+  const size = Math.min(1, (to.width * 0.32) / from.width, (to.height * 0.42) / from.height);
   const dx = to.left + to.width / 2 - (from.left + from.width / 2);
-  const dy = to.bottom - 9 - (from.height * size) / 2 - (from.top + from.height / 2);
+  const dy = to.bottom - 8 - (from.height * size) / 2 - (from.top + from.height / 2);
   return ghost.animate(
     [
       { transform: 'none' },
