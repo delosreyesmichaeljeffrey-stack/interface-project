@@ -60,6 +60,20 @@ The price-board rows are chalked in one by one the first time they appear.
 A pencil tick appears beside each field once it is filled in correctly. The
 order slip is still a prototype and says so: it sends nothing.
 
+## After the design critique (Nov 15)
+
+We ran a design critique on the live site (29 out of 36) and fixed what it found.
+
+| What the critique found | What we changed |
+|---|---|
+| On a short laptop screen the purchase through the window did not play, because the window was below the first screen | A slimmer signboard on short screens (`screenshots/23-final-home-short-laptop.png`), and the page now scrolls the store into view before the purchase |
+| Buttons overlapped for half a second when stepping between stories in the pop-up | All five pop-up pages now have one height, so the buttons stay put |
+| Notebook lines cut through the pop-up text | The text sits on the lines, as on the story pages (**line**) |
+| The → key turned the page while a photo was enlarged | Page-turn keys are ignored while a pop-up is open |
+| Credit links were the browser's blue; "Nabili na" stamps covered nearby signs | Links use our teal; stamps sit on the product's top-left corner (**harmony**) |
+| Ten different text sizes; uneven spacing on the order slip | Fewer sizes and even spacing (**proportion**) |
+| Wording that promised our own fieldwork ("in our barangay", "Mga tindahan sa amin") | Reworded: the photos are credited stand-ins, and the wall is now "Mga tindahan sa Pilipinas" |
+
 ## What we checked
 - Every page at 360, 390, 768, 1280 and 1440 wide: no sideways scrolling, no
   broken images or links, no script errors.

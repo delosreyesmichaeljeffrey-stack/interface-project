@@ -85,7 +85,9 @@ function transition(kind, update, artId) {
   root.classList.add('vt-dialog', kind);
   if (artId) root.dataset.vtArt = artId;
   const vt = document.startViewTransition(update);
-  return vt.finished.finally(() => {
+  // a newer transition can cut this one short (fast arrow presses): that is fine
+  vt.ready.catch(() => {});
+  return vt.finished.catch(() => {}).finally(() => {
     root.classList.remove('vt-dialog', kind);
     delete root.dataset.vtArt;
   });
@@ -228,13 +230,32 @@ function celebrate(latest) {
 
 /* ---------- The story dialog ---------- */
 
-function fill(id) {
-  const story = stories[id];
-  current = id;
+function write(story) {
   fields.title.textContent = story.title;
   fields.lead.textContent = story.lead;
   fields.body.textContent = story.body;
   critique.hidden = !story.critique;
+}
+
+// Every story's page gets the height of the tallest one at this screen width,
+// so the buttons below stay put when stepping between stories.
+let sizedFor = 0;
+function evenOut() {
+  if (sizedFor === window.innerWidth || !dialog.open) return;
+  sizedFor = window.innerWidth;
+  page.style.minHeight = '';
+  let tallest = 0;
+  order.forEach((id) => {
+    write(stories[id]);
+    tallest = Math.max(tallest, page.offsetHeight);
+  });
+  page.style.minHeight = tallest + 'px';
+}
+
+function fill(id) {
+  const story = stories[id];
+  current = id;
+  write(story);
   storyLink.href = 'kwento/' + id + '.html';
   storyPhoto.src = 'assets/img/fieldwork/story-' + id + '.jpg';
   storyPhoto.alt = story.photo;
@@ -341,8 +362,9 @@ function showStory(id, fromHatch) {
   if (fromHatch) root.classList.add('vt-hatch');
   return transition('vt-open', () => {
     button.classList.add('is-lifted', 'is-away');
-    fill(id);
     dialog.showModal();
+    evenOut();
+    fill(id);
     if (fromHatch) {
       setSheetOrigin();
       hatchSlot.replaceChildren();
@@ -359,14 +381,38 @@ function showStory(id, fromHatch) {
 function open(id) {
   if (busy || dialog.open) return;
   lastTrigger = buttons.get(id);
-  if (reduceMotion.matches || !document.startViewTransition || !hatchInView()) {
+  if (reduceMotion.matches || !document.startViewTransition) {
     showStory(id, false);
     return;
   }
   busy = true;
-  passThrough(id)
-    .then(() => showStory(id, true))
+  bringWindowIntoView()
+    .then((visible) => (visible ? passThrough(id).then(() => showStory(id, true)) : showStory(id, false)))
     .finally(() => { busy = false; });
+}
+
+// On a short screen the pass-through window can be below the fold. Scroll the
+// store into view first, so the purchase is always seen. Resolves to whether
+// the window can be seen (false only on screens too short to show it at all).
+function bringWindowIntoView() {
+  if (hatchInView()) return Promise.resolve(true);
+  const store = storeWindow.getBoundingClientRect();
+  const hole = hatchHole.getBoundingClientRect();
+  // show the whole store if it fits, otherwise put the window near the bottom
+  const fits = store.height + 40 <= window.innerHeight;
+  const by = fits ? store.top - (window.innerHeight - store.height) / 2 : hole.bottom + 24 - window.innerHeight;
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      window.removeEventListener('scrollend', finish);
+      resolve(hatchInView());
+    };
+    window.addEventListener('scrollend', finish);
+    setTimeout(finish, 700); // browsers without scrollend, or nothing left to scroll
+    window.scrollBy({ top: by, behavior: 'smooth' });
+  });
 }
 
 // Stepping to another story turns the page, left or right.

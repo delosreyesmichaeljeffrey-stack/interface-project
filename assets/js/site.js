@@ -66,6 +66,8 @@
   document.addEventListener('keydown', (event) => {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    // not while a pop-up is open (an enlarged photo, the phone menu's own keys)
+    if (document.querySelector('dialog[open]')) return;
     const step = { ArrowLeft: 'prev', ArrowRight: 'next' }[event.key];
     if (!step) return;
     const link = document.querySelector('.kwento-nav a[data-step="' + step + '"]');
@@ -121,7 +123,7 @@
     const move = (update) => {
       if (!document.startViewTransition || reduce.matches) { update(); return; }
       root.classList.add('vt-photo');
-      document.startViewTransition(update).finished.finally(() => root.classList.remove('vt-photo'));
+      document.startViewTransition(update).finished.catch(() => {}).finally(() => root.classList.remove('vt-photo'));
     };
     const open = (img) => {
       source = img;
