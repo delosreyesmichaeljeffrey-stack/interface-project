@@ -61,6 +61,7 @@ function check(field) {
   const message = rules[field](input.value);
   document.getElementById(field + '-error').textContent = message;
   input.setAttribute('aria-invalid', message ? 'true' : 'false');
+  input.closest('.field').classList.toggle('is-ok', !message); // a pencil tick beside the label
   return !message;
 }
 
@@ -98,5 +99,7 @@ form.addEventListener('submit', (event) => {
 document.getElementById('new-order').addEventListener('click', () => {
   form.reset();
   form.querySelectorAll('[aria-invalid]').forEach((input) => input.removeAttribute('aria-invalid'));
+  form.querySelectorAll('.is-ok').forEach((field) => field.classList.remove('is-ok'));
+  form.querySelectorAll('.error').forEach((error) => { error.textContent = ''; });
   swap(receipt, form, false, form.elements.name);
 });

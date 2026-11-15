@@ -1022,8 +1022,7 @@ body::before {
 }
 .photo-soon { font-family: var(--font-hand); font-size: 24px; line-height: 1.1; color: var(--muted); }
 .photo-plan { font-size: 14px; line-height: 1.4; color: var(--muted); max-width: 26ch; }
-.photo-caption { margin: 6px 0 0; font-family: var(--font-hand); font-size: 22px; line-height: 1.2; text-align: center; }
-.photo-more { display: none; }
+.photo-caption { margin: 6px 0 0; font-family: var(--font-hand); font-size: 22px; line-height: 1.3; text-align: center; }
 
 /* ---------- Kwento (story pages) ---------- */
 
@@ -1158,9 +1157,28 @@ a.story-step {
   text-decoration: none;
 }
 
+/* the pop-up is a preview: two lines, the story's photo, and a button to the full page */
+.story-preview { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; margin-bottom: 14px; }
+.story-photo {
+  width: 132px; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  padding: 5px 5px 14px; background: #FFFDF7;
+  box-shadow: 0 5px 10px rgba(43, 29, 20, 0.3);
+  rotate: 2.5deg;
+}
 .story-more { margin: 0; }
-.story-more a { font-weight: 800; color: var(--karatula); text-underline-offset: 3px; }
-.story-more a:hover { color: var(--karatula-dark); }
+.story-read {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px;
+  background: var(--kahoy); color: var(--papel);
+  border-radius: 999px;
+  font-weight: 800; font-size: 15px; text-decoration: none;
+  transition: background-color 180ms var(--ease-out);
+}
+.story-read:hover { background: var(--karatula-dark); }
+.story-read:focus-visible { outline: 3px solid var(--karatula); outline-offset: 3px; }
+@media (max-width: 560px) {
+  .story-preview { gap: 12px; }
+  .story-photo { width: 96px; padding: 4px 4px 10px; }
+}
 
 /* ---------- 404 ---------- */
 
@@ -1417,13 +1435,8 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
   .kwento--utang .story-lead { font-size: 27px; padding-left: 0; padding-top: 32px; background-position: left 4px; }
   .kwento-nav .story-step--prev, .kwento-nav .story-step--next { justify-self: stretch; }
   .kwento-nav .story-step--all { justify-self: stretch; }
-  .photo-wall .photo:nth-child(n+4) { display: none; }
   .item { max-width: none; }
   .notfound-links .story-step { flex: 1 1 100%; }
-  .photo-more {
-    display: block; margin: 24px 0 0; text-align: center;
-    font-family: var(--font-hand); font-size: 24px; color: var(--papel);
-  }
 }
 
 @media (max-width: 420px) {
@@ -1500,3 +1513,90 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
 .photo-caption .photo-credit { font-family: var(--font-body); }
 .credits-list { margin: 0 0 14px; padding-left: 20px; }
 .credits-list li { margin-bottom: 8px; font-size: 15px; overflow-wrap: anywhere; }
+
+/* ---------- Around the same store: inner pages ---------- */
+
+/* the store's striped awning runs under the header on every inner page */
+.site-nav { position: relative; }
+.site-nav::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 100%; z-index: 2;
+  height: 16px;
+  background: repeating-linear-gradient(90deg, var(--karatula) 0 28px, var(--papel) 28px 56px);
+  border-bottom: 2px solid var(--kahoy);
+  -webkit-mask: radial-gradient(circle 7px at 14px 16px, transparent 97%, #000) 0 0 / 28px 100% repeat-x;
+          mask: radial-gradient(circle 7px at 14px 16px, transparent 97%, #000) 0 0 / 28px 100% repeat-x;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+}
+/* the storefront has its own full awning */
+body:has(.storefront) .site-nav::after { display: none; }
+.page { padding-top: clamp(34px, 5vw, 56px); }
+
+/* photos open larger: the picture travels from its frame into the viewer */
+.photo-slot.has-photo img { cursor: zoom-in; transition: scale 220ms var(--ease-out); }
+.photo-slot.has-photo { overflow: hidden; }
+.photo-slot.has-photo img:hover { scale: 1.04; }
+.photo-slot.has-photo img:focus-visible { outline: 3px solid var(--karatula); outline-offset: -3px; }
+.photo-slot.has-photo img.is-zoomed { opacity: 0; }
+.viewer {
+  max-width: min(960px, calc(100vw - 24px)); max-height: calc(100dvh - 24px);
+  padding: 10px 10px 12px;
+  background: #FFFDF7; color: var(--kahoy);
+  border: 0; box-shadow: var(--shadow-paper);
+  overflow: auto;
+}
+.viewer::backdrop { background: rgba(43, 29, 20, 0.78); }
+.viewer-photo { margin: 0; }
+.viewer-photo img { display: block; max-width: 100%; width: auto; height: auto; max-height: calc(100dvh - 150px); margin: 0 auto; }
+.viewer-photo figcaption { padding: 8px 44px 0 4px; }
+.viewer-caption { display: block; font-family: var(--font-hand); font-size: 26px; line-height: 1.15; }
+.viewer .photo-credit { text-align: left; font-size: 13px; }
+.viewer-close { position: absolute; right: 8px; bottom: 8px; }
+html.vt-photo :is(.site-nav, .page-sign) { view-transition-name: none; }
+html.vt-photo .photo-slot img.is-zooming,
+html.vt-photo .viewer[open] .viewer-photo img { view-transition-name: photo-zoom; }
+html.vt-photo::view-transition-old(root) { animation: vt-hold 280ms both; }
+html.vt-photo::view-transition-new(root) { animation: vt-fade-in 280ms ease-out both; }
+::view-transition-group(photo-zoom) { z-index: 3; animation-duration: 420ms; }
+::view-transition-old(photo-zoom), ::view-transition-new(photo-zoom) { height: 100%; object-fit: cover; }
+
+/* things below the first screen arrive once as they scroll in (site.js adds .reveal) */
+.reveal { opacity: 0; }
+.reveal.is-in { animation: reveal-up 560ms cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms) both; }
+/* photos are pressed onto the wall and taped */
+.photo.reveal.is-in { animation-name: tape-on; }
+.price-row.reveal.is-in { animation-name: chalk-in; }
+@keyframes reveal-up { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }
+@keyframes tape-on { from { opacity: 0; translate: 0 -14px; scale: 1.08; rotate: -5deg; } 60% { opacity: 1; } to { opacity: 1; translate: 0 0; scale: 1; rotate: 0deg; } }
+@keyframes chalk-in { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+
+/* how far you have read, along the listahan's red margin */
+.kwento-progress {
+  position: absolute; left: 41px; top: 0; z-index: 1;
+  width: 4px; height: calc(var(--read, 0) * 100%);
+  background: var(--karatula); border-radius: 0 0 2px 2px;
+  pointer-events: none;
+}
+
+/* Pabili: a pencil tick beside each field that is filled in correctly */
+.field.is-ok label::after {
+  content: ""; display: inline-block; width: 16px; height: 16px; margin-left: 8px; vertical-align: -2px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 9l4 4 8-10' fill='none' stroke='%231F6F78' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: tick-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes tick-in { from { scale: 0.3; opacity: 0; } }
+.receipt-lines dd { min-width: 0; }
+
+@media (max-width: 560px) {
+  .kwento-progress { left: 35px; }
+  .viewer-caption { font-size: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-slot.has-photo img { transition: none; }
+  .photo-slot.has-photo img:hover { scale: none; }
+  .field.is-ok label::after { animation: none; }
+  .reveal { opacity: 1; }
+}
+
+/* long source lines and DOI addresses wrap instead of pushing the page sideways */
+.kwento-sources p, .credits-list li, .photo-credit, .receipt-lines dd { overflow-wrap: anywhere; }

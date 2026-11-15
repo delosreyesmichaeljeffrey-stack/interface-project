@@ -63,16 +63,17 @@ wire them in.
 
 ---
 
-## Current state (Nov 9)
-Nine slots now use **openly licensed Wikimedia Commons photos** as stand-ins:
-`storefront`, `rehas`, `shelf`, `karatula`, `tambayan`, `story-tingi`,
-`story-tambayan`, `story-signs`, `story-sachet`. Their credits are under each
-photo and in the "Mga litrato at pinagkunan" section of `tungkol.html`.
-Originals are in `docs/TINGI_image/`.
+## Current state (Nov 15)
+All eleven slots now use **openly licensed Wikimedia Commons photos** as stand-ins.
+Their credits are under each photo and in the "Mga litrato at pinagkunan" section
+of `tungkol.html`. Originals of the first nine are in `docs/TINGI_image/`.
 
-Still placeholders (no suitable open-licensed photo found): the **tindera** frame on
-Paninda and the **listahan** photo on the Utang story. These are best covered by
-your own fieldwork photos.
+Added Nov 15:
+- `tindera.jpg`: "Sari-Sari Store Cavite.jpg" by Glen, CC BY 2.0 (cropped)
+- `story-utang.jpg`: "Sari-Sari Store Samal Davao.jpg" by Burgermac, CC BY 2.0 (resized).
+  This is a tindera with a customer, not a listahan page: no openly licensed
+  photo of a listahan exists. A photo of a real one (names covered) from your
+  own fieldwork should replace it.
 
 When you replace a stand-in with your own photo, update the caption/credit under
 it and remove that entry from the credits list on `tungkol.html`.

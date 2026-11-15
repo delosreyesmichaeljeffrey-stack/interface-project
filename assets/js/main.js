@@ -7,26 +7,31 @@ const order = ['tingi', 'utang', 'tambayan', 'signs', 'sachet'];
 const stories = {
   tingi: {
     title: 'Tingi',
+    photo: 'Sachets hanging at a sari-sari store counter',
     lead: 'Buying in small portions to get through one day at a time.',
     body: 'One sachet of shampoo, one cup of rice, one piece of candy. Tingi lets families with a daily budget buy only what they need today.'
   },
   utang: {
     title: 'Utang',
+    photo: 'A tindera and a customer at a store in Samal, Davao',
     lead: 'The listahan: credit built on trust between neighbors.',
     body: 'The tindera writes every debt by hand in a notebook. Paying it back is as much about keeping a relationship as it is about money.'
   },
   tambayan: {
     title: 'Tambayan',
+    photo: 'A row of small stores in Bilar, Bohol',
     lead: 'The store as the neighborhood’s news hub and meeting place.',
     body: 'People stay for a softdrink, a chat, or the latest news. The bench outside the store is where the community talks.'
   },
   signs: {
     title: 'Signs & labels',
+    photo: 'A hand-painted sari-sari store sign',
     lead: 'Hand-painted signs and loud packaging as vernacular design.',
     body: 'From painted store names to “Bawal ang utang, bukas pwede,” the sari-sari store is full of everyday Filipino design and humor.'
   },
   sachet: {
     title: 'Sachet economy',
+    photo: 'Empty sachets and plastic bags in Bohol',
     critique: true,
     lead: 'Affordable today, plastic waste for a long time after.',
     body: 'Small packs make goods affordable today, but the bigger pack can cost less per unit, and every sachet becomes plastic waste.'
@@ -54,6 +59,7 @@ const fields = {
 };
 const critique = document.getElementById('story-critique');
 const storyLink = document.getElementById('story-link');
+const storyPhoto = document.getElementById('story-photo');
 const prev = document.getElementById('story-prev');
 const next = document.getElementById('story-next');
 const greeting = document.getElementById('greeting');
@@ -230,6 +236,8 @@ function fill(id) {
   fields.body.textContent = story.body;
   critique.hidden = !story.critique;
   storyLink.href = 'kwento/' + id + '.html';
+  storyPhoto.src = 'assets/img/fieldwork/story-' + id + '.jpg';
+  storyPhoto.alt = story.photo;
   art.replaceChildren(buttons.get(id).querySelector('svg').cloneNode(true));
   art.dataset.story = id;
 
