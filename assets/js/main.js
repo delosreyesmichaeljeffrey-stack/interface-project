@@ -318,6 +318,15 @@ function passThrough(id) {
   });
 }
 
+// Tells the CSS where the window is on the story page, so the page can grow
+// out of it and shrink back into it.
+function setSheetOrigin() {
+  const hole = hatchHole.getBoundingClientRect();
+  const sheet = dialog.getBoundingClientRect();
+  root.style.setProperty('--sheet-ox', hole.left + hole.width / 2 - sheet.left + 'px');
+  root.style.setProperty('--sheet-oy', hole.top + hole.height / 2 - sheet.top + 'px');
+}
+
 // Opens the story. `fromHatch` makes the page grow out of the window.
 function showStory(id, fromHatch) {
   const button = buttons.get(id);
@@ -327,10 +336,7 @@ function showStory(id, fromHatch) {
     fill(id);
     dialog.showModal();
     if (fromHatch) {
-      const hole = hatchHole.getBoundingClientRect();
-      const sheet = dialog.getBoundingClientRect();
-      root.style.setProperty('--sheet-ox', hole.left + hole.width / 2 - sheet.left + 'px');
-      root.style.setProperty('--sheet-oy', hole.top + hole.height / 2 - sheet.top + 'px');
+      setSheetOrigin();
       hatchSlot.replaceChildren();
       delete hatchSlot.dataset.story;
     }
@@ -369,10 +375,30 @@ function step(id, direction) {
 function close() {
   if (!dialog.open) return;
   const closing = current;
+  // The reverse of buying: the page goes back in through the window and the
+  // tindera puts the product back, so the drawing travels from her to its
+  // shelf (not from the corner of the story page).
+  const viaHatch = !reduceMotion.matches && Boolean(document.startViewTransition) && hatchInView();
+  if (viaHatch) {
+    setSheetOrigin();
+    hatchSlot.dataset.story = closing;
+    hatchSlot.replaceChildren(buttons.get(closing).querySelector('svg').cloneNode(true));
+    delete art.dataset.story; // the copy in the window travels; the one on the page leaves with the page
+    root.classList.add('vt-hatch');
+    hatchHand.animate(
+      [{ translate: '0 0' }, { translate: '0 -55%', offset: 0.4 }, { translate: '0 0' }],
+      { duration: 520, easing: 'ease-in-out' }
+    );
+  }
   transition('vt-close', () => {
     dialog.close();
+    hatchSlot.replaceChildren();
+    delete hatchSlot.dataset.story;
     buttons.forEach((button) => button.classList.remove('is-lifted', 'is-away'));
-  }, closing).then(() => celebrate(closing));
+  }, closing).then(() => {
+    root.classList.remove('vt-hatch');
+    celebrate(closing);
+  });
 }
 
 buttons.forEach((button, id) => {

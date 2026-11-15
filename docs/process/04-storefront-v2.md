@@ -73,6 +73,10 @@ as the rest of the site.
 - Hanging goods sway slightly, the bulb's light breathes, the cat's tail flicks.
 - After the shutter lifts on the first visit, the five story products hop once
   to show which ones can be picked.
+- Closing a story reverses the purchase: the page shrinks back into the window
+  and the product travels from the tindera back to its shelf.
+- The window is a real opening in the grill: its frame moves with the grill,
+  while the tindera stays inside with the shelves, so you see past the frame.
 - The layers shift a little as the mouse moves: goods clipped to the outside of
   the grill move most, the back rows least (**perspective**).
 
