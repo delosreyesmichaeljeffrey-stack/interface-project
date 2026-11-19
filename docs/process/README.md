@@ -20,6 +20,7 @@ with a critical angle on poverty, survival and the sachet economy.
 | 03 | Nov 9 | `03-site-screenshots.md` | Screenshots of every finished page with captions naming the element or principle used (`screenshots/03-…` to `12-…`) | Ethan |
 | 04 | Nov 15 | `04-storefront-v2.md` | Homepage reworked after our professor's feedback: a crowded tindahan with a pass-through window, with before/after and captions (`screenshots/13-…` to `15-…`) | Michael |
 | 05 | Nov 15 | `05-final-pages.md` | Finishing the other pages: missing photos and sources, bug fixes, photo viewer and inner-page motion (`screenshots/16-…` to `22-…`) | Michael |
+| 06 | Nov 19 | `screenshots/24-…` to `39-…` | Final screenshots of the live site for the documentation PDF and the final presentation | Michael |
 
 Screenshots of each step are in `screenshots/`. Open the `.html` files in any
 browser to see them live.

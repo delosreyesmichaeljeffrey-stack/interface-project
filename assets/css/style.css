@@ -1628,8 +1628,9 @@ html.vt-photo::view-transition-new(root) { animation: vt-fade-in 280ms ease-out 
 }
 
 /* links inside paper use the palette, not the browser's blue */
-.paper a, .kwento a, .credits-list a { color: var(--pintura); text-underline-offset: 3px; }
-.paper a:hover, .kwento a:hover { color: var(--karatula); }
+/* (buttons styled as links keep their own colours) */
+:is(.paper, .kwento, .credits-list) a:not(.story-step) { color: var(--pintura); text-underline-offset: 3px; }
+:is(.paper, .kwento) a:not(.story-step):hover { color: var(--karatula); }
 .photo-credit a { color: inherit; }
 /* readable line length on the wide paper blocks */
 .credits > p, .listahan p { max-width: 68ch; }
