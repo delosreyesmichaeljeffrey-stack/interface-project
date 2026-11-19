@@ -21,6 +21,7 @@ with a critical angle on poverty, survival and the sachet economy.
 | 04 | Nov 15 | `04-storefront-v2.md` | Homepage reworked after our professor's feedback: a crowded tindahan with a pass-through window, with before/after and captions (`screenshots/13-…` to `15-…`) | Michael |
 | 05 | Nov 15 | `05-final-pages.md` | Finishing the other pages: missing photos and sources, bug fixes, photo viewer and inner-page motion (`screenshots/16-…` to `22-…`) | Michael |
 | 06 | Nov 19 | `screenshots/24-…` to `39-…` | Final screenshots of the live site for the documentation PDF and the final presentation | Michael |
+| 07 | Nov 19 | `screenshots/40-final-tungkol-full.png` | Tungkol page after correcting the team roles (Michael: Developer, Ethan: Lead Designer) | Michael |
 
 Screenshots of each step are in `screenshots/`. Open the `.html` files in any
 browser to see them live.
