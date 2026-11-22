@@ -23,6 +23,7 @@ with a critical angle on poverty, survival and the sachet economy.
 | 06 | Nov 19 | `screenshots/24-…` to `39-…` | Final screenshots of the live site for the documentation PDF and the final presentation | Michael |
 | 07 | Nov 19 | `screenshots/40-final-tungkol-full.png` | Tungkol page after correcting the team roles (Michael: Developer, Ethan: Lead Designer) | Michael |
 | 08 | Nov 22 | `06-final-additions.md` | Filipino/English switch, store sounds, the Ilista mo notebook and sourced numbers, after comparing with other groups' sites (`screenshots/41-…` to `46-…`) | Michael |
+| 09 | Nov 22 | `06-final-additions.md` (second half) | Fixes after the second design critique: number tags, header, language glosses, Filipino wording, the resibo finale and a distinct Sachet critique (`screenshots/47-…` to `50-…`) | Michael |
 
 Screenshots of each step are in `screenshots/`. Open the `.html` files in any
 browser to see them live.

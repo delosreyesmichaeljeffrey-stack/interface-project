@@ -49,3 +49,18 @@ apart in red as the critique.
 - Switching language while a story is open rewrites the open story.
 - Sound stays off until the visitor turns it on; the choice is remembered.
 - The notebook entry is saved, restored after a reload, and can be erased.
+
+## After the design critique (Nov 22)
+
+A second critique of the whole live site scored it 29/40 and found these
+problems, which we then fixed. Images: `screenshots/47-…` to `50-…`.
+
+| Problem | What we changed |
+|---|---|
+| Filipino figures on Tungkol spilled out of their price tags; screen readers heard "0" until scrolled | The unit ("milyon+") sits on its own smaller line; screen readers get the real figure — `49-final-tungkol-numbers-v2.png` |
+| The header wrapped onto two rows on small phones and tablets | Below 860px the links fold into the menu; on phones one language button names the language you can switch to; all header buttons are 44px |
+| ENG mode showed Filipino words with no translation; some labels stayed English in FIL | Small English glosses (e.g. "Tungkol · About", "Pinagkunan · Sources"); every label now follows the switch |
+| Filipino wording flagged by the review | e.g. "matitingkad na pakete", "nakasalalay sa tiwala", "gamit nang sachet", "Ekonomiyang sachet" used everywhere |
+| Reading all five stories had a weak ending | The tindera hands over a *resibo* of the five stories, paid with *tiwala*, with links to Ilista mo and Pabili — `47-final-home-resibo.png` |
+| The Sachet critique looked like the other stories | Greyer paper, a torn red seal, price tags comparing the cost per gram, and a band of litter with GAIA's figure — `48-final-sachet-critique.png`, `50-final-phone-critique-popup.png` |
+| Small fixes | Source notes and focus rings readable on their backgrounds; the erase button is 44px with a drawn icon; the double outline on the Pabili choices is gone; the notebook lines stop at the pop-up photo |
