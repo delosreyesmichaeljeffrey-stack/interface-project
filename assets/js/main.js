@@ -335,6 +335,8 @@ function fill(id) {
   next.textContent = storyOf(after).title + ' →';
   next.dataset.story = after;
 
+  // the tindera answers the story you just picked (seen once you are back at the counter)
+  if (read.size + (read.has(id) ? 0 : 1) < order.length) say('“' + greetings[id] + '”');
   if (!read.has(id)) fresh.add(id);
   read.add(id);
   saveRead();

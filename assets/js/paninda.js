@@ -26,6 +26,19 @@ const nameInput = document.getElementById('ilista-name');
 const error = document.getElementById('ilista-error');
 const left = document.getElementById('ilista-left');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+// "Erased. Undo" line under the list, shown for a few seconds after erasing
+const undo = document.createElement('p');
+undo.className = 'ilista-undo';
+undo.hidden = true;
+undo.setAttribute('role', 'status');
+undo.innerHTML = '<span class="ilista-undo-text"></span><button type="button"></button>';
+list.after(undo);
+let lastErased = null;
+let undoTimer = 0;
+const undoLabels = () => {
+  undo.querySelector('.ilista-undo-text').textContent = fil() ? 'Nabura ang linya.' : 'Line erased.';
+  undo.querySelector('button').textContent = fil() ? 'Ibalik' : 'Undo';
+};
 const fil = () => window.Tingi && window.Tingi.lang === 'fil';
 
 let entries = [];
@@ -49,10 +62,15 @@ function entryItem(entry, index) {
   remove.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';
   remove.setAttribute('aria-label', fil() ? 'Burahin ang linyang ito' : 'Erase this line');
   remove.addEventListener('click', () => {
+    lastErased = { entry: entries[index], index };
     entries.splice(index, 1);
     save();
     render();
-    text.focus();
+    undoLabels();
+    undo.hidden = false;
+    undo.querySelector('button').focus();
+    clearTimeout(undoTimer);
+    undoTimer = setTimeout(() => { undo.hidden = true; lastErased = null; }, 8000);
   });
   li.append(who, ' ', words, remove);
   return li;
@@ -66,6 +84,17 @@ function render() {
 function count() {
   left.textContent = text.maxLength - text.value.length;
 }
+
+undo.querySelector('button').addEventListener('click', () => {
+  if (!lastErased) return;
+  entries.splice(lastErased.index, 0, lastErased.entry);
+  lastErased = null;
+  save();
+  render();
+  undo.hidden = true;
+  clearTimeout(undoTimer);
+  text.focus();
+});
 
 text.addEventListener('input', () => {
   count();
@@ -102,6 +131,7 @@ form.addEventListener('submit', (event) => {
 // "You"/"Ikaw" and the erase labels follow the language switch
 document.addEventListener('tingi:lang', () => {
   render();
+  undoLabels();
   if (error.textContent) error.textContent = fil() ? 'Isulat muna ang alaala mo.' : 'Write your memory first.';
 });
 

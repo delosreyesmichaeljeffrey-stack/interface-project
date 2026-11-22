@@ -1851,3 +1851,27 @@ html.vt-photo::view-transition-new(root) { animation: vt-fade-in 280ms ease-out 
 .finale-line--critique .finale-take { color: var(--karatula); font-weight: 700; }
 .finale-receipt .receipt-lines { margin-top: 12px; }
 .finale-next { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 8px 0 0 !important; max-width: none !important; }
+
+/* ---------- Last fixes (Nov 22) ---------- */
+
+/* lines that end with one lonely word wrap more evenly */
+.sign-sub, .section-note, .page-intro, .credits-list li, .number-label, .finale-take, .litter-text { text-wrap: pretty; }
+/* comfortable line length on the paper sections */
+.paper p { max-width: 62ch; }
+/* tag pills that wrap onto two lines get room to breathe */
+.product .tag { line-height: 1.15; }
+@media (max-width: 420px) { .product .tag { padding: 3px 8px; } }
+.story-critique { padding: 2px 8px; line-height: 1.2; }
+/* the stock around the five stories steps back a little, so the five stories lead */
+.shelf-top, .shelf-back, .stock { filter: saturate(0.82) brightness(0.96); }
+/* a story page's photo now sits right after its opening, between the line blocks */
+.kwento-lines + .photo--story { margin-top: 0; }
+/* undo after erasing a line in Ilista mo */
+.ilista-undo { display: flex; align-items: center; gap: 10px; margin: -24px 0 24px !important; font-size: 15px; line-height: 20px; color: var(--muted); }
+.ilista-undo[hidden] { display: none; }
+.ilista-undo button {
+  min-height: 44px; padding: 0 14px;
+  border: 2px solid var(--kahoy); border-radius: 999px; background: var(--papel); color: var(--kahoy);
+  font: 800 14px/1 var(--font-body); cursor: pointer;
+}
+.ilista-undo button:hover { background: var(--sachet); }
