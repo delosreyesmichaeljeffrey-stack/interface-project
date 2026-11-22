@@ -45,21 +45,24 @@ function swap(from, to, printing, focusTarget = to) {
   });
 }
 
+const fil = () => Boolean(window.Tingi) && window.Tingi.lang === 'fil';
 const rules = {
-  name: (value) => value.trim() ? '' : 'Pakilagay ang pangalan mo.',
+  name: (value) => value.trim() ? '' : (fil() ? 'Pakilagay ang pangalan mo.' : 'Please enter your name.'),
   email: (value) => {
-    if (!value.trim()) return 'Pakilagay ang email mo, halimbawa: juan@email.com';
+    if (!value.trim()) return fil() ? 'Pakilagay ang email mo, halimbawa: juan@email.com' : 'Please enter your email, for example: juan@email.com';
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
       ? ''
-      : 'Kulang ang email. Dapat may @ at domain, halimbawa: juan@email.com';
+      : (fil() ? 'Kulang ang email. Dapat may @ at domain, halimbawa: juan@email.com' : 'That email looks incomplete. It needs an @ and a domain, for example: juan@email.com');
   },
-  message: (value) => value.trim() ? '' : 'Ano po ang order mo? Isulat ang mensahe mo.'
+  message: (value) => value.trim() ? '' : (fil() ? 'Ano po ang order mo? Isulat ang mensahe mo.' : 'What would you like to order? Write your message.')
 };
 
 function check(field) {
   const input = form.elements[field];
   const message = rules[field](input.value);
-  document.getElementById(field + '-error').textContent = message;
+  const error = document.getElementById(field + '-error');
+  error.textContent = message;
+  error.lang = fil() ? 'fil' : 'en';
   input.setAttribute('aria-invalid', message ? 'true' : 'false');
   input.closest('.field').classList.toggle('is-ok', !message); // a pencil tick beside the label
   return !message;
@@ -91,9 +94,19 @@ form.addEventListener('submit', (event) => {
   }
   document.getElementById('r-name').textContent = form.elements.name.value.trim();
   document.getElementById('r-email').textContent = form.elements.email.value.trim();
-  document.getElementById('r-type').textContent = form.elements.type.value;
+  // the chosen type in both languages; the CSS shows the current one
+  const chip = form.querySelector('input[name="type"]:checked').nextElementSibling;
+  document.getElementById('r-type').replaceChildren(...chip.cloneNode(true).childNodes);
   document.getElementById('r-message').textContent = form.elements.message.value.trim();
+  if (window.Tingi) window.Tingi.sound.play('tear');
   swap(form, receipt, true);
+});
+
+// errors already on screen follow the language switch
+document.addEventListener('tingi:lang', () => {
+  Object.keys(rules).forEach((field) => {
+    if (form.elements[field].getAttribute('aria-invalid') === 'true') check(field);
+  });
 });
 
 document.getElementById('new-order').addEventListener('click', () => {

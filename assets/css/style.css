@@ -106,6 +106,41 @@ body::before {
 .site-nav nav .nav-pabili:hover { background: var(--karatula-dark); }
 .site-nav nav .nav-pabili[aria-current="page"] { background: var(--papel); color: var(--kahoy); }
 
+/* language switch and sound button (added by site.js) */
+.site-nav nav { order: 1; }
+.nav-tools { order: 2; display: flex; align-items: center; gap: 8px; }
+.lang-switch {
+  display: inline-flex; padding: 3px; gap: 2px;
+  border: 2px solid rgba(246, 235, 211, 0.35); border-radius: 8px;
+}
+.lang-switch button, .sound-toggle {
+  min-height: 36px; border: 0; border-radius: 5px;
+  background: transparent; color: var(--papel);
+  font: 800 13px/1 var(--font-body); letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.lang-switch button { min-width: 44px; padding: 0 8px; }
+.lang-switch button[aria-pressed="true"] { background: var(--sachet); color: var(--kahoy); }
+.lang-switch button:not([aria-pressed="true"]):hover { background: rgba(246, 235, 211, 0.12); }
+.sound-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 42px; padding: 0 12px;
+  border: 2px solid rgba(246, 235, 211, 0.35); border-radius: 8px;
+}
+.sound-toggle:hover { background: rgba(246, 235, 211, 0.12); }
+.sound-toggle svg { width: 20px; height: 20px; }
+.sound-toggle .sound-waves { display: none; }
+.sound-toggle.is-on { background: var(--papel); color: var(--kahoy); border-color: var(--papel); }
+.sound-toggle.is-on .sound-waves { display: inline; }
+.sound-toggle.is-on .sound-off { display: none; }
+.lang-switch button:focus-visible, .sound-toggle:focus-visible { outline: 3px solid var(--sachet); outline-offset: 2px; }
+
+/* one language at a time: elements come in .t-en / .t-fil pairs */
+html:not([data-lang="fil"]) .t-fil,
+html[data-lang="fil"] .t-en { display: none !important; }
+/* the English helper words next to Filipino labels are only for ENG */
+html[data-lang="fil"] :is(.label-en, .shelf-hint-en) { display: none !important; }
+
 /* ---------- Storefront ---------- */
 
 .storefront {
@@ -833,6 +868,39 @@ body::before {
   background: var(--pintura); border-radius: 999px;
 }
 .member p { margin: 0; }
+
+/* "Sa mga numero": four price tags with sourced figures (count up in site.js) */
+.numbers { margin-bottom: 40px; }
+.number-tags {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px; list-style: none; margin: 0 0 14px; padding: 0;
+}
+.number-tag {
+  position: relative;
+  padding: 30px 18px 18px 18px;
+  background: var(--sachet); color: var(--kahoy);
+  border: 3px solid var(--kahoy); border-radius: 6px 6px 6px 26px;
+  box-shadow: 0 6px 14px rgba(43, 29, 20, 0.3);
+}
+.number-tag::before { /* the hole the tag hangs from */
+  content: ""; position: absolute; top: 10px; left: 16px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--kahoy); box-shadow: inset 0 0 0 3px rgba(246, 235, 211, 0.6);
+}
+.number-tag:nth-child(even) { transform: rotate(1.2deg); }
+.number-tag:nth-child(odd) { transform: rotate(-1deg); }
+.number-tag--critique { background: var(--papel); border-top: 10px solid var(--karatula); }
+.number-tag p { margin: 0; }
+.number { font-family: var(--font-sign); font-size: clamp(30px, 3.2vw, 40px); line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.number-tag--critique .number { color: var(--karatula); }
+.number-label { margin-top: 10px !important; font-weight: 700; font-size: 15px; line-height: 1.35; }
+.number-label sup { margin-left: 2px; font-size: 11px; }
+.number-sources {
+  margin: 0; padding-left: 22px;
+  color: var(--muted-light); font-size: 14px; line-height: 1.45; overflow-wrap: anywhere;
+}
+.number-sources li + li { margin-top: 4px; }
+.number-sources a { color: var(--sachet); }
 .member-name { font-weight: 800; font-size: 18px; line-height: 1.25; }
 .member-role { margin-top: 6px !important; font-weight: 800; color: var(--karatula); font-size: 14px; }
 .member-desc { margin-top: 4px !important; color: var(--muted); font-size: 14px; }
@@ -849,6 +917,35 @@ body::before {
 .listahan .section-title { margin: 0 0 32px; line-height: 32px; }
 .listahan p { margin: 0 0 32px; }
 .handnote { font-family: var(--font-hand); font-size: 26px; color: var(--pintura); }
+
+/* "Ilista mo": visitors write a line in the tindera's notebook */
+.ilista { max-width: 46rem; margin: 0 auto 40px; }
+.ilista-entries { list-style: none; margin: 0 0 32px; padding: 0; }
+.ilista-entry {
+  position: relative;
+  font-family: var(--font-hand); font-size: 25px; line-height: 32px; color: var(--pintura);
+  overflow-wrap: anywhere;
+}
+.ilista-entry--mine { color: var(--kahoy); padding-right: 40px; }
+.ilista-who {
+  font-family: var(--font-body); font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--karatula);
+}
+.ilista-entry--sample .ilista-who { color: var(--muted); }
+.ilista-who::after { content: " ·"; }
+.ilista-remove {
+  position: absolute; right: 0; top: 0;
+  width: 32px; height: 32px; padding: 0;
+  border: 0; border-radius: 50%; background: transparent; color: var(--muted);
+  font: 700 22px/1 var(--font-body); cursor: pointer;
+}
+.ilista-remove:hover { background: rgba(184, 56, 42, 0.12); color: var(--karatula); }
+.ilista-remove:focus-visible { outline: 3px solid var(--sachet); }
+.ilista-form .field { margin-bottom: 8px; }
+.ilista-form label { line-height: 32px; margin-bottom: 0; }
+.ilista-count { margin: 4px 0 0 !important; font-size: 14px; line-height: 20px; color: var(--muted); }
+.ilista-form .error { margin: 0 !important; min-height: 24px; line-height: 24px; }
+.ilista-note { margin: 12px 0 0 !important; font-size: 14px; line-height: 20px; color: var(--muted); }
 
 .page-intro {
   max-width: 36rem; margin: 0 auto 28px;
@@ -1452,7 +1549,11 @@ html.vt-prev::view-transition-new(story-page) { animation: wipe-new-prev 440ms c
 @media (max-width: 560px) {
   /* nav: brand + burger on one row; the links drop down as a panel */
   .site-nav { padding: 8px 12px; position: relative; }
-  .site-nav .nav-toggle { display: inline-flex; }
+  .site-nav .nav-toggle { display: inline-flex; order: 2; }
+  .nav-tools { order: 1; margin-left: auto; gap: 6px; }
+  .nav-js .site-nav nav { order: 3; }
+  .sound-toggle .sound-label { display: none; }
+  .sound-toggle { padding: 0 9px; }
   .nav-js .site-nav nav { display: none; width: 100%; flex-basis: 100%; }
   .nav-js .site-nav.is-open nav { display: block; }
   .nav-js .site-nav nav ul { flex-direction: column; gap: 4px; padding: 6px 0 4px; }

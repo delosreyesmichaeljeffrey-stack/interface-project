@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tingi — The Sari-Sari Store as a Cultural Archive</title>
-<meta name="description" content="A website you enter like a sari-sari store. Every product on the shelf opens a story about Filipino community life.">
+<title data-fil="Tingi — Ang Sari-Sari Store bilang Arkibo ng Kultura">Tingi — The Sari-Sari Store as a Cultural Archive</title>
+<meta name="description" content="A website you enter like a sari-sari store. Every product on the shelf opens a story about Filipino community life." data-fil-content="Isang website na pinapasok na parang sari-sari store. Bawat paninda sa istante ay nagbubukas ng kwento tungkol sa buhay ng komunidad na Pilipino.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Caveat:wght@600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202611156">
-<script src="assets/js/site.js?v=202611156"></script>
+<link rel="stylesheet" href="assets/css/style.css?v=202611221">
+<script src="assets/js/site.js?v=202611221"></script>
 <script>
   // First visit this session: keep the store shuttered until main.js lifts it.
   try {
@@ -20,7 +20,7 @@
 </script>
 </head>
 <body>
-<a class="skip-link" href="#shelves">Skip to the shelves</a>
+<a class="skip-link" href="#shelves"><span class="t-en">Skip to the shelves</span><span class="t-fil" lang="fil">Lumaktaw sa mga istante</span></a>
 
 <!-- Drawings of the goods in the store. Each one is drawn once here and reused with <use>. -->
 <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
@@ -129,11 +129,11 @@
 </svg>
 
 <header class="site-nav">
-  <a class="brand" href="index.html" aria-label="Tingi home">
+  <a class="brand" href="index.html" aria-label="Tingi home" data-fil-aria-label="Tingi, balik sa tindahan">
     <span class="brand-mark" aria-hidden="true">T</span>
     <span class="brand-name">Tingi</span>
   </a>
-  <nav aria-label="Main">
+  <nav aria-label="Main" data-fil-aria-label="Pangunahing menu">
     <ul lang="fil">
       <li><a href="index.html" aria-current="page">Tindahan</a></li>
       <li><a href="paninda.html">Paninda</a></li>
@@ -149,7 +149,7 @@
       <h1 class="sign-name" id="store-name">Tingi</h1>
       <div class="sign-side">
         <p class="sign-band" lang="fil">Sari-sari store</p>
-        <p class="sign-sub">The sari-sari store as a cultural archive</p>
+        <p class="sign-sub"><span class="t-en">The sari-sari store as a cultural archive</span><span class="t-fil" lang="fil">Ang sari-sari store bilang arkibo ng kultura</span></p>
       </div>
     </div>
 
@@ -161,7 +161,7 @@
     <div class="awning" aria-hidden="true"></div>
 
     <div class="window" id="shelves">
-      <h2 class="visually-hidden">Shelves: pick a product to read its story</h2>
+      <h2 class="visually-hidden"><span class="t-en">Shelves: pick a product to read its story</span><span class="t-fil" lang="fil">Mga istante: pumili ng paninda para mabasa ang kwento nito</span></h2>
       <div class="window-walls" aria-hidden="true"></div>
       <div class="window-light" aria-hidden="true"></div>
 
@@ -230,7 +230,7 @@
         <span class="stock stock--wide" aria-hidden="true"><svg class="g c-dark" viewBox="0 0 18 50" width="18" height="50" style="--w:18" aria-hidden="true"><use href="#g-bote"/></svg><svg class="g c-dark" viewBox="0 0 18 50" width="18" height="50" style="--w:18" aria-hidden="true"><use href="#g-bote"/></svg><svg class="g c-teal filler--wide" viewBox="0 0 20 58" width="20" height="58" style="--w:20" aria-hidden="true"><use href="#g-softdrink"/></svg></span>
         <button class="product" data-story="signs" aria-haspopup="dialog">
           <svg viewBox="0 0 80 80" aria-hidden="true"><path d="M40 4v10M30 14l10-10 10 10" fill="none" stroke="#2B1D14" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="14" width="68" height="48" rx="4" fill="#B8382A" stroke="#F2B705" stroke-width="4"/><path d="M16 30c6-5 12 5 18 0s12-5 18 0 10 3 12 0" fill="none" stroke="#F6EBD3" stroke-width="4" stroke-linecap="round"/><path d="M16 46c8-4 14 4 22 0s12-4 18 0" fill="none" stroke="#F2B705" stroke-width="3" stroke-linecap="round"/><path d="M22 62v14M58 62v14" stroke="#2B1D14" stroke-width="3"/></svg>
-          <span class="tag">Signs &amp; labels</span>
+          <span class="tag"><span class="t-en">Signs &amp; labels</span><span class="t-fil" lang="fil">Karatula</span></span>
           <span class="stamp" aria-hidden="true">Nabili na</span>
           <span class="visually-hidden read-label"></span>
         </button>
@@ -271,7 +271,7 @@
         <span class="stock" aria-hidden="true"><svg class="g c-teal" viewBox="0 0 44 56" width="44" height="56" style="--w:44" aria-hidden="true"><use href="#g-garapon"/></svg><svg class="g filler--wide" viewBox="0 0 62 26" width="62" height="26" style="--w:62" aria-hidden="true"><use href="#g-itlog"/></svg></span>
         <button class="product" data-story="sachet" aria-haspopup="dialog">
           <svg viewBox="0 0 80 80" aria-hidden="true"><g stroke="#2B1D14" stroke-width="2.5"><rect x="8" y="34" width="24" height="38" rx="2" fill="#F2B705" transform="rotate(-12 20 53)"/><rect x="28" y="28" width="24" height="44" rx="2" fill="#B8382A"/><rect x="48" y="34" width="24" height="38" rx="2" fill="#1F6F78" transform="rotate(10 60 53)"/></g><path d="M18 18c6-8 14-8 20 0s14 8 20 0" fill="none" stroke="#2B1D14" stroke-width="2.5" stroke-linecap="round"/></svg>
-          <span class="tag">Sachet economy</span>
+          <span class="tag"><span class="t-en">Sachet economy</span><span class="t-fil" lang="fil">Sachet</span></span>
           <span class="stamp" aria-hidden="true">Nabili na</span>
           <span class="visually-hidden read-label"></span>
         </button>
@@ -297,7 +297,7 @@
       <p class="greeting" id="greeting" lang="fil">“Ano po'ng sa inyo?”</p>
       <div class="progress" id="progress" aria-live="polite">
         <span class="tokens" aria-hidden="true"><i data-story="tingi"></i><i data-story="utang"></i><i data-story="tambayan"></i><i data-story="signs"></i><i data-story="sachet"></i></span>
-        <p><span lang="fil">Nabasa mo:</span> <strong id="read-count">0</strong> of 5 stories</p>
+        <p><span lang="fil">Nabasa mo:</span> <strong id="read-count">0</strong> <span class="t-en">of 5 stories</span><span class="t-fil" lang="fil">sa 5 kwento</span></p>
       </div>
     </div>
 
@@ -326,7 +326,7 @@
 <footer class="site-footer">
   <p><strong>Tingi</strong> · Digital Interface Design Project</p>
   <p>Ethan Vicmudo · Michael Delos Reyes · Aezekiel Quirol · Elijah Penilla · Rolf Gantala</p>
-  <p class="footer-note">Photo credits and sources: see <a href="tungkol.html#credits">Tungkol sa Tindahan</a>.</p>
+  <p class="footer-note"><span class="t-en">Photo credits and sources: see</span><span class="t-fil" lang="fil">Mga credit ng litrato at pinagkunan: tingnan ang</span> <a href="tungkol.html#credits">Tungkol sa Tindahan</a>.</p>
 </footer>
 
 <dialog class="story" id="story" aria-labelledby="story-title">
@@ -335,7 +335,7 @@
       <div class="story-art" id="story-art" aria-hidden="true"></div>
       <div>
         <h2 class="story-title" id="story-title"></h2>
-        <p class="story-critique" id="story-critique" hidden>Critique</p>
+        <p class="story-critique" id="story-critique" hidden><span class="t-en">Critique</span><span class="t-fil" lang="fil">Kritika</span></p>
       </div>
     </div>
     <div class="story-preview">
@@ -345,19 +345,19 @@
         <p class="story-body" id="story-body"></p>
       </div>
     </div>
-    <p class="story-more"><a class="story-read" id="story-link" href="paninda.html">Read the full story</a></p>
+    <p class="story-more"><a class="story-read" id="story-link" href="paninda.html"><span class="t-en">Read the full story</span><span class="t-fil" lang="fil">Basahin ang buong kwento</span></a></p>
   </div>
-  <nav class="story-nav" aria-label="Other stories">
+  <nav class="story-nav" aria-label="Other stories" data-fil-aria-label="Iba pang kwento">
     <button type="button" class="story-step" id="story-prev"></button>
     <button type="button" class="story-step story-step--next" id="story-next"></button>
   </nav>
   <form method="dialog" class="story-close-form">
-    <button class="story-close" aria-label="Close story">
+    <button class="story-close" aria-label="Close story" data-fil-aria-label="Isara ang kwento">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
     </button>
   </form>
 </dialog>
 
-<script src="assets/js/main.js?v=202611156"></script>
+<script src="assets/js/main.js?v=202611221"></script>
 </body>
 </html>

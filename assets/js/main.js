@@ -38,6 +38,43 @@ const stories = {
   }
 };
 
+// The same five stories in Filipino, shown when the language switch is on FIL.
+const storiesFil = {
+  tingi: {
+    title: 'Tingi',
+    photo: 'Mga sachet na nakasabit sa counter ng sari-sari store',
+    lead: 'Pagbili nang paunti-unti para mairaos ang isang araw.',
+    body: 'Isang sachet ng shampoo, isang tasang bigas, isang pirasong kendi. Sa tingi, nabibili ng pamilyang may arawang budget ang kailangan lang nila ngayong araw.'
+  },
+  utang: {
+    title: 'Utang',
+    photo: 'Isang tindera at isang mamimili sa tindahan sa Samal, Davao',
+    lead: 'Ang listahan: pautang na nakasandal sa tiwala ng magkakapitbahay.',
+    body: 'Isinusulat ng tindera ang bawat utang sa isang kuwaderno. Ang pagbabayad ay hindi lang tungkol sa pera kundi pati sa pag-iingat ng samahan.'
+  },
+  tambayan: {
+    title: 'Tambayan',
+    photo: 'Isang hanay ng maliliit na tindahan sa Bilar, Bohol',
+    lead: 'Ang tindahan bilang sentro ng balita at tagpuan ng kapitbahayan.',
+    body: 'Tumatambay ang mga tao para sa softdrinks, kwentuhan, o pinakabagong balita. Sa bangko sa labas ng tindahan nag-uusap ang komunidad.'
+  },
+  signs: {
+    title: 'Mga karatula',
+    photo: 'Isang karatula ng sari-sari store na pininta sa kamay',
+    lead: 'Mga karatulang pininta sa kamay at maiingay na pakete bilang disenyong bernakular.',
+    body: 'Mula sa pinintang pangalan ng tindahan hanggang sa “Bawal ang utang, bukas pwede,” puno ang sari-sari store ng pang-araw-araw na disenyo at biro ng mga Pilipino.'
+  },
+  sachet: {
+    title: 'Ekonomiya ng sachet',
+    photo: 'Mga basyong sachet at plastic bag sa Bohol',
+    critique: true,
+    lead: 'Abot-kaya ngayon, basurang plastik nang matagal pagkatapos.',
+    body: 'Abot-kaya ang maliliit na pakete ngayon, pero minsan mas mura bawat yunit ang mas malaki, at nagiging basurang plastik ang bawat sachet.'
+  }
+};
+const isFil = () => Boolean(window.Tingi) && window.Tingi.lang === 'fil';
+const storyOf = (id) => (isFil() ? storiesFil : stories)[id];
+
 const greetings = {
   tingi: 'Isang sachet lang? Sige, tingi lang.',
   utang: 'Ay, nabasa mo na ’yung utang?',
@@ -48,6 +85,8 @@ const greetings = {
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const root = document.documentElement;
+// store sounds from site.js; silent unless the visitor turned them on
+const play = (name, delay) => { if (window.Tingi) window.Tingi.sound.play(name, delay); };
 
 const dialog = document.getElementById('story');
 const page = dialog.querySelector('.story-page');
@@ -101,7 +140,7 @@ const shutter = document.querySelector('.shutter');
 if (root.classList.contains('shutter-run')) {
   const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
   Promise.race([fontsReady, new Promise((resolve) => setTimeout(resolve, 800))])
-    .then(() => root.classList.add('shutter-go'));
+    .then(() => { root.classList.add('shutter-go'); play('shutter'); });
   shutter.addEventListener('animationend', () => {
     root.classList.remove('shutter-run', 'shutter-go');
     // the five story products hop one after another: these are the ones to pick
@@ -200,7 +239,7 @@ function renderRead() {
     button.classList.toggle('is-read', isRead);
     // a freshly read story keeps its stamp hidden until the reader is back at the shelf
     button.classList.toggle('stamp-pending', fresh.has(id) && !reduceMotion.matches);
-    button.querySelector('.read-label').textContent = isRead ? ' (read)' : '';
+    button.querySelector('.read-label').textContent = isRead ? (isFil() ? ' (nabasa na)' : ' (read)') : '';
     tokens.get(id).classList.toggle('is-read', isRead);
   });
   readCount.textContent = read.size;
@@ -209,6 +248,7 @@ function renderRead() {
 function celebrate(latest) {
   if (read.size === order.length) {
     say('“Kumpleto! Balik ka ulit, ha!”');
+    if (fresh.size) play('ding', 200 + fresh.size * 90);
   } else if (latest) {
     say('“' + greetings[latest] + '”');
   }
@@ -216,6 +256,7 @@ function celebrate(latest) {
     let delay = 0;
     fresh.forEach((id) => {
       buttons.get(id).classList.remove('stamp-pending');
+      play('stamp', delay);
       buttons.get(id).querySelector('.stamp').animate(
         [{ scale: 1.9, opacity: 0 }, { scale: 1, opacity: 1 }], { ...pop, delay, fill: 'backwards' }
       );
@@ -248,12 +289,14 @@ function evenOut() {
   order.forEach((id) => {
     write(stories[id]);
     tallest = Math.max(tallest, page.offsetHeight);
+    write(storiesFil[id]);
+    tallest = Math.max(tallest, page.offsetHeight);
   });
   page.style.minHeight = tallest + 'px';
 }
 
 function fill(id) {
-  const story = stories[id];
+  const story = storyOf(id);
   current = id;
   write(story);
   storyLink.href = 'kwento/' + id + '.html';
@@ -265,9 +308,9 @@ function fill(id) {
   const index = order.indexOf(id);
   const before = order[(index + order.length - 1) % order.length];
   const after = order[(index + 1) % order.length];
-  prev.textContent = '← ' + stories[before].title;
+  prev.textContent = '← ' + storyOf(before).title;
   prev.dataset.story = before;
-  next.textContent = stories[after].title + ' →';
+  next.textContent = storyOf(after).title + ' →';
   next.dataset.story = after;
 
   if (!read.has(id)) fresh.add(id);
@@ -299,6 +342,7 @@ function passThrough(id) {
   const from = drawing.getBoundingClientRect();
   const to = hatchHole.getBoundingClientRect();
   const pace = purchases++ ? 0.6 : 1; // the first purchase is shown in full; later ones are quicker
+  play('coin');
 
   hatchCoin.animate(
     [
@@ -342,6 +386,7 @@ function passThrough(id) {
     // the drawing now sits in the window; from there it travels into the story
     hatchSlot.dataset.story = id;
     hatchSlot.replaceChildren(drawing.cloneNode(true));
+    play('thunk');
     button.classList.add('is-lifted'); // only the copy in the window may travel into the story
     ghost.remove();
   });
@@ -360,6 +405,7 @@ function setSheetOrigin() {
 function showStory(id, fromHatch) {
   const button = buttons.get(id);
   if (fromHatch) root.classList.add('vt-hatch');
+  play('page');
   return transition('vt-open', () => {
     button.classList.add('is-lifted', 'is-away');
     dialog.showModal();
@@ -417,6 +463,7 @@ function bringWindowIntoView() {
 
 // Stepping to another story turns the page, left or right.
 function step(id, direction) {
+  play('page');
   transition('vt-' + direction, () => {
     buttons.get(current).classList.remove('is-lifted', 'is-away');
     buttons.get(id).classList.add('is-lifted', 'is-away');
@@ -444,6 +491,7 @@ function close() {
       { duration: 520, easing: 'ease-in-out' }
     );
   }
+  play('page');
   transition('vt-close', () => {
     dialog.close();
     hatchSlot.replaceChildren();
@@ -488,6 +536,17 @@ dialog.addEventListener('keydown', (event) => {
 // Return focus to the product of the story that was last open.
 dialog.addEventListener('close', () => {
   if (lastTrigger) lastTrigger.focus();
+});
+
+// The language switch: rewrite the open story and the "(read)" labels.
+document.addEventListener('tingi:lang', () => {
+  renderRead();
+  if (!dialog.open || !current) return;
+  const index = order.indexOf(current);
+  write(storyOf(current));
+  storyPhoto.alt = storyOf(current).photo;
+  prev.textContent = '← ' + storyOf(order[(index + order.length - 1) % order.length]).title;
+  next.textContent = storyOf(order[(index + 1) % order.length]).title + ' →';
 });
 
 renderRead();

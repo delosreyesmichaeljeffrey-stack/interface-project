@@ -4,7 +4,178 @@
 
 (() => {
   const STEP_KEY = 'tingi-step';
+  const LANG_KEY = 'tingi-lang';
+  const SOUND_KEY = 'tingi-sound';
   const root = document.documentElement;
+
+  /* ---------- Language: English or Filipino ---------- */
+
+  // Pages carry both languages: elements marked .t-en and .t-fil, and the CSS
+  // shows one set. It is set here, before the page is drawn, so the other
+  // language never flashes. Scripts with their own text listen for 'tingi:lang'.
+  let lang = 'en';
+  try { if (localStorage.getItem(LANG_KEY) === 'fil') lang = 'fil'; } catch (error) { /* ignore */ }
+  const applyLang = () => {
+    root.dataset.lang = lang;
+    root.lang = lang === 'fil' ? 'fil' : 'en';
+  };
+  applyLang();
+  // Text nobody sees on screen (alt text, button labels, the tab title, the
+  // page description) is swapped here: data-fil-alt, data-fil-aria-label,
+  // data-fil-content, and data-fil on <title>.
+  const ATTRS = ['alt', 'aria-label', 'content', 'placeholder'];
+  const applyAttrs = () => {
+    ATTRS.forEach((attr) => {
+      const key = 'fil' + attr.replace(/(^|-)([a-z])/g, (m, dash, c) => c.toUpperCase());
+      const keep = 'en' + key.slice(3);
+      document.querySelectorAll('[data-fil-' + attr + ']').forEach((el) => {
+        if (!(keep in el.dataset)) el.dataset[keep] = el.getAttribute(attr) || '';
+        el.setAttribute(attr, lang === 'fil' ? el.dataset[key] : el.dataset[keep]);
+      });
+    });
+    const title = document.querySelector('title[data-fil]');
+    if (title) {
+      if (!title.dataset.en) title.dataset.en = title.textContent;
+      document.title = lang === 'fil' ? title.dataset.fil : title.dataset.en;
+    }
+  };
+  if (lang === 'fil') {
+    // the head is parsed by now, so the title and description can change at once
+    applyAttrs();
+    document.addEventListener('DOMContentLoaded', applyAttrs);
+  }
+  const setLang = (next) => {
+    if (next === lang) return;
+    lang = next;
+    applyLang();
+    applyAttrs();
+    try { localStorage.setItem(LANG_KEY, lang); } catch (error) { /* ignore */ }
+    document.dispatchEvent(new CustomEvent('tingi:lang', { detail: lang }));
+  };
+
+  /* ---------- Store sounds (off until the visitor turns them on) ---------- */
+
+  // Made in the browser with Web Audio, so there are no sound files to load.
+  const sound = (() => {
+    let on = false;
+    try { on = localStorage.getItem(SOUND_KEY) === 'on'; } catch (error) { /* ignore */ }
+    let ctx = null;
+    let out = null;
+    const start = () => {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      if (!ctx) {
+        ctx = new AC();
+        out = ctx.createGain();
+        out.gain.value = 0.55;
+        out.connect(ctx.destination);
+      }
+      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+      return ctx;
+    };
+    // a tone that fades out (optionally gliding to `to` Hz)
+    const tone = (t, freq, dur, { type = 'sine', gain = 0.2, to } = {}) => {
+      const osc = ctx.createOscillator();
+      const amp = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, t);
+      if (to) osc.frequency.exponentialRampToValueAtTime(to, t + dur);
+      amp.gain.setValueAtTime(0.0001, t);
+      amp.gain.exponentialRampToValueAtTime(gain, t + 0.005);
+      amp.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      osc.connect(amp).connect(out);
+      osc.start(t);
+      osc.stop(t + dur + 0.02);
+    };
+    // a burst of filtered noise: paper, wood, metal
+    const noise = (t, dur, { type = 'lowpass', freq = 1000, to, q = 0.8, gain = 0.2, attack = 0.004 } = {}) => {
+      const length = Math.max(1, Math.round(ctx.sampleRate * dur));
+      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = type;
+      filter.Q.value = q;
+      filter.frequency.setValueAtTime(freq, t);
+      if (to) filter.frequency.exponentialRampToValueAtTime(to, t + dur);
+      const amp = ctx.createGain();
+      amp.gain.setValueAtTime(0.0001, t);
+      amp.gain.exponentialRampToValueAtTime(gain, t + attack);
+      amp.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(filter).connect(amp).connect(out);
+      src.start(t);
+      return amp;
+    };
+    const sounds = {
+      // a piso on the counter: two bright rings
+      coin(t) {
+        tone(t, 2093, 0.32, { gain: 0.16 });
+        tone(t, 3136, 0.22, { gain: 0.07, type: 'triangle' });
+        tone(t + 0.09, 2637, 0.4, { gain: 0.12 });
+        tone(t + 0.09, 3951, 0.25, { gain: 0.05, type: 'triangle' });
+      },
+      // a product set down on the wooden ledge
+      thunk(t) {
+        tone(t, 160, 0.14, { gain: 0.35, to: 70 });
+        noise(t, 0.05, { freq: 700, gain: 0.12 });
+      },
+      // a page of the listahan turning
+      page(t) {
+        noise(t, 0.26, { type: 'bandpass', freq: 900, to: 3200, q: 0.6, gain: 0.09, attack: 0.06 });
+      },
+      // the rubber stamp: Nabili na
+      stamp(t) {
+        tone(t, 110, 0.16, { gain: 0.4, to: 55 });
+        noise(t, 0.05, { freq: 1500, gain: 0.18 });
+      },
+      // the roll-up shutter rattling open
+      shutter(t) {
+        const amp = noise(t, 1.25, { type: 'bandpass', freq: 1600, to: 900, q: 0.7, gain: 0.11, attack: 0.08 });
+        const lfo = ctx.createOscillator();
+        const depth = ctx.createGain();
+        lfo.type = 'square';
+        lfo.frequency.value = 22;
+        depth.gain.value = 0.05;
+        lfo.connect(depth).connect(amp.gain);
+        lfo.start(t);
+        lfo.stop(t + 1.25);
+        tone(t + 1.1, 95, 0.2, { gain: 0.25, to: 60 });
+      },
+      // all five stories read: a small bell
+      ding(t) {
+        tone(t, 1319, 1.1, { gain: 0.13 });
+        tone(t, 2637, 0.6, { gain: 0.04 });
+        tone(t + 0.16, 1976, 1.3, { gain: 0.11 });
+      },
+      // the order slip tearing off
+      tear(t) {
+        noise(t, 0.35, { type: 'highpass', freq: 2500, to: 5000, gain: 0.08, attack: 0.02 });
+      }
+    };
+    return {
+      get on() { return on; },
+      set(value) {
+        on = value;
+        try { localStorage.setItem(SOUND_KEY, on ? 'on' : 'off'); } catch (error) { /* ignore */ }
+        document.dispatchEvent(new CustomEvent('tingi:sound', { detail: on }));
+        if (on) this.play('coin');
+      },
+      play(name, delay = 0) {
+        if (!on || !sounds[name]) return;
+        if (!start()) return;
+        try { sounds[name](ctx.currentTime + 0.01 + delay / 1000); } catch (error) { /* ignore */ }
+      }
+    };
+  })();
+
+  // Shared with the page scripts (main.js, pabili.js, the Ilista mo notebook).
+  window.Tingi = {
+    sound,
+    get lang() { return lang; },
+    setLang
+  };
 
   // The story a page is about, from its address (kwento/<story>.html).
   const storyOf = (url) => {
@@ -136,10 +307,13 @@
       const credit = frame.querySelector('.photo-credit');
       caption.replaceChildren();
       if (text) {
+        // the caption without its credit line (it may hold both languages)
         const line = document.createElement('span');
         line.className = 'viewer-caption';
         if (text.lang) line.lang = text.lang;
-        line.textContent = [...text.childNodes].filter((node) => node.nodeType === 3).map((node) => node.textContent).join('').trim();
+        const copy = text.cloneNode(true);
+        copy.querySelectorAll('.photo-credit').forEach((node) => node.remove());
+        line.append(...copy.childNodes);
         caption.append(line);
       }
       if (credit) caption.append(credit.cloneNode(true));
@@ -200,7 +374,77 @@
     });
   };
 
-  const ready = () => { setupMenu(); setupPhotos(); setupReveal(); };
+  // The language switch and the sound button sit in the header on every page.
+  const setupTools = () => {
+    const header = document.querySelector('.site-nav');
+    if (!header || header.querySelector('.nav-tools')) return;
+    const tools = document.createElement('div');
+    tools.className = 'nav-tools';
+    tools.innerHTML =
+      '<div class="lang-switch" role="group" aria-label="Wika / Language">' +
+        '<button type="button" data-lang="fil" lang="fil">FIL</button>' +
+        '<button type="button" data-lang="en" lang="en">ENG</button>' +
+      '</div>' +
+      '<button type="button" class="sound-toggle">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/>' +
+        '<path class="sound-waves" d="M16 9c1.3 1.6 1.3 4.4 0 6M18.5 6.5c2.8 3 2.8 8 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+        '<path class="sound-off" d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
+        '<span class="sound-label"></span>' +
+      '</button>';
+    const nav = header.querySelector('nav');
+    header.insertBefore(tools, nav);
+
+    const langButtons = tools.querySelectorAll('[data-lang]');
+    const soundButton = tools.querySelector('.sound-toggle');
+    const soundLabel = tools.querySelector('.sound-label');
+    const render = () => {
+      langButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.lang === lang)));
+      soundButton.setAttribute('aria-pressed', String(sound.on));
+      soundButton.classList.toggle('is-on', sound.on);
+      const word = lang === 'fil' ? 'Tunog' : 'Sound';
+      soundLabel.textContent = word;
+      soundButton.setAttribute('aria-label', word + (lang === 'fil' ? (sound.on ? ': bukas' : ': sarado') : (sound.on ? ': on' : ': off')));
+    };
+    langButtons.forEach((button) => button.addEventListener('click', () => setLang(button.dataset.lang)));
+    soundButton.addEventListener('click', () => sound.set(!sound.on));
+    document.addEventListener('tingi:lang', render);
+    document.addEventListener('tingi:sound', render);
+    render();
+  };
+
+  // Figures count up from zero the first time they scroll into view. The real
+  // value is already in the HTML, so without this script (or with reduced
+  // motion) it simply shows the number.
+  const setupCounters = () => {
+    const counts = document.querySelectorAll('.count[data-to]');
+    if (!counts.length || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const run = (el) => {
+      const to = parseFloat(el.dataset.to);
+      const decimals = parseInt(el.dataset.decimals || '0', 10);
+      const start = performance.now();
+      const duration = 1200;
+      const frame = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = (to * eased).toFixed(decimals);
+        if (t < 1) requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    };
+    const seen = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        run(entry.target);
+        seen.unobserve(entry.target);
+      });
+    }, { threshold: 0.6 });
+    counts.forEach((el) => {
+      el.textContent = (0).toFixed(parseInt(el.dataset.decimals || '0', 10));
+      seen.observe(el);
+    });
+  };
+
+  const ready = () => { setupTools(); setupMenu(); setupPhotos(); setupReveal(); setupCounters(); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);
   else ready();
 })();

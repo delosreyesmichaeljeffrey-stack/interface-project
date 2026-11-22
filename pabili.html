@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pabili! — Tingi</title>
-<meta name="description" content="Send us a question, feedback, or a story suggestion using our sari-sari store order slip.">
+<title data-fil="Pabili! — Tingi">Pabili! — Tingi</title>
+<meta name="description" content="Send us a question, feedback, or a story suggestion using our sari-sari store order slip." data-fil-content="Magpadala sa amin ng tanong, puna, o mungkahing kwento gamit ang order slip ng aming sari-sari store.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Caveat:wght@600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202611156">
-<script src="assets/js/site.js?v=202611156"></script>
+<link rel="stylesheet" href="assets/css/style.css?v=202611221">
+<script src="assets/js/site.js?v=202611221"></script>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip-link" href="#main"><span class="t-en">Skip to content</span><span class="t-fil" lang="fil">Lumaktaw sa nilalaman</span></a>
 
 <header class="site-nav">
-  <a class="brand" href="index.html" aria-label="Tingi home">
+  <a class="brand" href="index.html" aria-label="Tingi home" data-fil-aria-label="Tingi, balik sa tindahan">
     <span class="brand-mark" aria-hidden="true">T</span>
     <span class="brand-name">Tingi</span>
   </a>
-  <nav aria-label="Main">
+  <nav aria-label="Main" data-fil-aria-label="Pangunahing menu">
     <ul lang="fil">
       <li><a href="index.html">Tindahan</a></li>
       <li><a href="paninda.html">Paninda</a></li>
@@ -34,7 +34,7 @@
     <h1 class="page-title" lang="fil">Pabili!</h1>
   </div>
 
-  <p class="page-intro"><span lang="fil">May tanong, feedback, o kwento tungkol sa sari‑sari store ninyo?</span> Write to us on the order slip.</p>
+  <p class="page-intro"><span class="t-en"><span lang="fil">May tanong, feedback, o kwento tungkol sa sari‑sari store ninyo?</span> Write to us on the order slip.</span><span class="t-fil" lang="fil">May tanong, feedback, o kwento tungkol sa sari‑sari store ninyo? Sumulat sa amin sa order slip.</span></p>
 
   <div class="slip-wrap">
     <form class="slip" id="slip" novalidate>
@@ -58,9 +58,9 @@
       <fieldset class="chips-field">
         <legend><span lang="fil">Ano'ng bibilhin?</span> <span class="label-en">(Type of message)</span></legend>
         <div class="chips">
-          <label class="chip"><input type="radio" name="type" value="Question" checked><span>Question</span></label>
-          <label class="chip"><input type="radio" name="type" value="Feedback"><span>Feedback</span></label>
-          <label class="chip"><input type="radio" name="type" value="Story suggestion"><span>Story suggestion</span></label>
+          <label class="chip"><input type="radio" name="type" value="Question" checked><span><span class="t-en">Question</span><span class="t-fil" lang="fil">Tanong</span></span></label>
+          <label class="chip"><input type="radio" name="type" value="Feedback"><span><span class="t-en">Feedback</span><span class="t-fil" lang="fil">Puna</span></span></label>
+          <label class="chip"><input type="radio" name="type" value="Story suggestion"><span><span class="t-en">Story suggestion</span><span class="t-fil" lang="fil">Mungkahing kwento</span></span></label>
         </div>
       </fieldset>
 
@@ -71,21 +71,21 @@
       </div>
 
       <button class="slip-submit" type="submit" lang="fil">Pabili po!</button>
-      <p class="slip-note">This prototype doesn’t send messages yet.</p>
+      <p class="slip-note"><span class="t-en">This prototype doesn’t send messages yet.</span><span class="t-fil" lang="fil">Hindi pa nagpapadala ng mensahe ang prototype na ito.</span></p>
     </form>
 
     <section class="receipt" id="receipt" hidden tabindex="-1" aria-labelledby="receipt-title">
       <p class="slip-store">Tingi Sari-Sari Store</p>
       <h2 class="receipt-title" id="receipt-title" lang="fil">Salamat po!</h2>
-      <p><span lang="fil">Naisulat na sa slip ang order mo.</span> This prototype doesn’t send it yet, so nobody has received it.</p>
+      <p><span class="t-en"><span lang="fil">Naisulat na sa slip ang order mo.</span> This prototype doesn’t send it yet, so nobody has received it.</span><span class="t-fil" lang="fil">Naisulat na sa slip ang order mo. Hindi pa ito ipinapadala ng prototype, kaya wala pang nakatanggap nito.</span></p>
       <dl class="receipt-lines">
         <div><dt lang="fil">Pangalan</dt><dd id="r-name"></dd></div>
         <div><dt>Email</dt><dd id="r-email"></dd></div>
-        <div><dt>Type</dt><dd id="r-type"></dd></div>
+        <div><dt><span class="t-en">Type</span><span class="t-fil" lang="fil">Uri</span></dt><dd id="r-type"></dd></div>
         <div class="receipt-message"><dt>Order</dt><dd id="r-message"></dd></div>
       </dl>
       <p class="handnote" lang="fil">Balik ka ulit, ha!</p>
-      <button class="slip-submit" type="button" id="new-order">New order</button>
+      <button class="slip-submit" type="button" id="new-order"><span class="t-en">New order</span><span class="t-fil" lang="fil">Bagong order</span></button>
     </section>
   </div>
 </main>
@@ -95,6 +95,6 @@
   <p>Ethan Vicmudo · Michael Delos Reyes · Aezekiel Quirol · Elijah Penilla · Rolf Gantala</p>
 </footer>
 
-<script src="assets/js/pabili.js?v=202611156"></script>
+<script src="assets/js/pabili.js?v=202611221"></script>
 </body>
 </html>
