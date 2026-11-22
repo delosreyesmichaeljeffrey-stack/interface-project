@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Caveat:wght@600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202611221">
-<script src="assets/js/site.js?v=202611221"></script>
+<link rel="stylesheet" href="assets/css/style.css?v=202611222">
+<script src="assets/js/site.js?v=202611222"></script>
 </head>
 <body>
 <a class="skip-link" href="#main"><span class="t-en">Skip to content</span><span class="t-fil" lang="fil">Lumaktaw sa nilalaman</span></a>
@@ -21,10 +21,10 @@
   </a>
   <nav aria-label="Main" data-fil-aria-label="Pangunahing menu">
     <ul lang="fil">
-      <li><a href="index.html">Tindahan</a></li>
-      <li><a href="paninda.html">Paninda</a></li>
-      <li><a href="tungkol.html">Tungkol</a></li>
-      <li><a href="pabili.html" class="nav-pabili" aria-current="page">Pabili!</a></li>
+      <li><a href="index.html">Tindahan<span class="gloss t-en" lang="en">Store</span></a></li>
+      <li><a href="paninda.html">Paninda<span class="gloss t-en" lang="en">Stories</span></a></li>
+      <li><a href="tungkol.html">Tungkol<span class="gloss t-en" lang="en">About</span></a></li>
+      <li><a href="pabili.html" class="nav-pabili" aria-current="page">Pabili!<span class="gloss t-en" lang="en">Contact</span></a></li>
     </ul>
   </nav>
 </header>
@@ -70,21 +70,21 @@
         <p class="error" id="message-error" lang="fil"></p>
       </div>
 
-      <button class="slip-submit" type="submit" lang="fil">Pabili po!</button>
+      <button class="slip-submit" type="submit" lang="fil">Pabili po!<span class="gloss t-en" lang="en">Send</span></button>
       <p class="slip-note"><span class="t-en">This prototype doesn’t send messages yet.</span><span class="t-fil" lang="fil">Hindi pa nagpapadala ng mensahe ang prototype na ito.</span></p>
     </form>
 
     <section class="receipt" id="receipt" hidden tabindex="-1" aria-labelledby="receipt-title">
       <p class="slip-store">Tingi Sari-Sari Store</p>
-      <h2 class="receipt-title" id="receipt-title" lang="fil">Salamat po!</h2>
+      <h2 class="receipt-title" id="receipt-title" lang="fil">Salamat po!<span class="gloss gloss--block t-en" lang="en">Thank you!</span></h2>
       <p><span class="t-en"><span lang="fil">Naisulat na sa slip ang order mo.</span> This prototype doesn’t send it yet, so nobody has received it.</span><span class="t-fil" lang="fil">Naisulat na sa slip ang order mo. Hindi pa ito ipinapadala ng prototype, kaya wala pang nakatanggap nito.</span></p>
       <dl class="receipt-lines">
-        <div><dt lang="fil">Pangalan</dt><dd id="r-name"></dd></div>
+        <div><dt><span class="t-en">Name</span><span class="t-fil" lang="fil">Pangalan</span></dt><dd id="r-name"></dd></div>
         <div><dt>Email</dt><dd id="r-email"></dd></div>
         <div><dt><span class="t-en">Type</span><span class="t-fil" lang="fil">Uri</span></dt><dd id="r-type"></dd></div>
         <div class="receipt-message"><dt>Order</dt><dd id="r-message"></dd></div>
       </dl>
-      <p class="handnote" lang="fil">Balik ka ulit, ha!</p>
+      <p class="handnote" lang="fil">Balik ka ulit, ha! <span class="gloss t-en" lang="en">(Come back again!)</span></p>
       <button class="slip-submit" type="button" id="new-order"><span class="t-en">New order</span><span class="t-fil" lang="fil">Bagong order</span></button>
     </section>
   </div>
@@ -95,6 +95,6 @@
   <p>Ethan Vicmudo · Michael Delos Reyes · Aezekiel Quirol · Elijah Penilla · Rolf Gantala</p>
 </footer>
 
-<script src="assets/js/pabili.js?v=202611221"></script>
+<script src="assets/js/pabili.js?v=202611222"></script>
 </body>
 </html>

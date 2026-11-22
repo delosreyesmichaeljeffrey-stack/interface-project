@@ -257,7 +257,9 @@
     button.className = 'nav-toggle';
     button.setAttribute('aria-controls', nav.id);
     button.setAttribute('aria-expanded', 'false');
-    button.setAttribute('aria-label', 'Menu');
+    const label = () => button.setAttribute('aria-label', lang === 'fil' ? 'Menu ng mga pahina' : 'Menu');
+    label();
+    document.addEventListener('tingi:lang', label);
     button.innerHTML = '<span class="nav-toggle-bars" aria-hidden="true"></span>';
     header.insertBefore(button, nav);
     const setOpen = (open) => {
@@ -280,10 +282,10 @@
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const viewer = document.createElement('dialog');
     viewer.className = 'viewer';
-    viewer.setAttribute('aria-label', 'Photo');
+    const t = (en, fil) => (lang === 'fil' ? fil : en);
     viewer.innerHTML =
       '<figure class="viewer-photo"><img alt=""><figcaption></figcaption></figure>' +
-      '<button type="button" class="story-close viewer-close" aria-label="Close photo">' +
+      '<button type="button" class="story-close viewer-close">' +
       '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>';
     document.body.append(viewer);
     const big = viewer.querySelector('img');
@@ -338,12 +340,20 @@
     photos.forEach((img) => {
       img.tabIndex = 0;
       img.setAttribute('role', 'button');
-      img.setAttribute('aria-label', 'Enlarge photo: ' + img.alt);
+      // (its label follows the language switch; see labelPhotos below)
       img.addEventListener('click', () => open(img));
       img.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(img); }
       });
     });
+    const labelPhotos = () => {
+      viewer.setAttribute('aria-label', t('Photo', 'Litrato'));
+      viewer.querySelector('.viewer-close').setAttribute('aria-label', t('Close photo', 'Isara ang litrato'));
+      photos.forEach((img) => img.setAttribute('aria-label', t('Enlarge photo: ', 'Palakihin ang litrato: ') + img.alt));
+    };
+    labelPhotos();
+    // alt text is swapped by the language switch first, then the labels follow
+    document.addEventListener('tingi:lang', labelPhotos);
     viewer.querySelector('.viewer-close').addEventListener('click', close);
     viewer.addEventListener('cancel', (event) => { event.preventDefault(); close(); });
     viewer.addEventListener('click', (event) => { if (event.target === viewer) close(); });
@@ -403,7 +413,12 @@
       soundButton.classList.toggle('is-on', sound.on);
       const word = lang === 'fil' ? 'Tunog' : 'Sound';
       soundLabel.textContent = word;
-      soundButton.setAttribute('aria-label', word + (lang === 'fil' ? (sound.on ? ': bukas' : ': sarado') : (sound.on ? ': on' : ': off')));
+      langButtons.forEach((button) => {
+        const fil = button.dataset.lang === 'fil';
+        button.setAttribute('aria-label', lang === 'fil' ? (fil ? 'Filipino' : 'Ingles') : (fil ? 'Filipino' : 'English'));
+      });
+      soundButton.removeAttribute('aria-label');
+      soundButton.title = lang === 'fil' ? 'Mga tunog ng tindahan' : 'Store sounds';
     };
     langButtons.forEach((button) => button.addEventListener('click', () => setLang(button.dataset.lang)));
     soundButton.addEventListener('click', () => sound.set(!sound.on));
@@ -439,6 +454,12 @@
       });
     }, { threshold: 0.6 });
     counts.forEach((el) => {
+      // screen readers get the real figure at once; the counting copy is hidden from them
+      const real = document.createElement('span');
+      real.className = 'visually-hidden';
+      real.textContent = el.textContent;
+      el.before(real);
+      el.setAttribute('aria-hidden', 'true');
       el.textContent = (0).toFixed(parseInt(el.dataset.decimals || '0', 10));
       seen.observe(el);
     });

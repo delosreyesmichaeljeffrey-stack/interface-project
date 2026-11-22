@@ -46,7 +46,7 @@ function entryItem(entry, index) {
   const remove = document.createElement('button');
   remove.type = 'button';
   remove.className = 'ilista-remove';
-  remove.textContent = '×';
+  remove.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';
   remove.setAttribute('aria-label', fil() ? 'Burahin ang linyang ito' : 'Erase this line');
   remove.addEventListener('click', () => {
     entries.splice(index, 1);

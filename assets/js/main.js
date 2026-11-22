@@ -49,7 +49,7 @@ const storiesFil = {
   utang: {
     title: 'Utang',
     photo: 'Isang tindera at isang mamimili sa tindahan sa Samal, Davao',
-    lead: 'Ang listahan: pautang na nakasandal sa tiwala ng magkakapitbahay.',
+    lead: 'Ang listahan: pautang na nakasalalay sa tiwala ng magkakapitbahay.',
     body: 'Isinusulat ng tindera ang bawat utang sa isang kuwaderno. Ang pagbabayad ay hindi lang tungkol sa pera kundi pati sa pag-iingat ng samahan.'
   },
   tambayan: {
@@ -61,12 +61,12 @@ const storiesFil = {
   signs: {
     title: 'Mga karatula',
     photo: 'Isang karatula ng sari-sari store na pininta sa kamay',
-    lead: 'Mga karatulang pininta sa kamay at maiingay na pakete bilang disenyong bernakular.',
+    lead: 'Mga karatulang pininta sa kamay at matitingkad na pakete bilang disenyong bernakular.',
     body: 'Mula sa pinintang pangalan ng tindahan hanggang sa “Bawal ang utang, bukas pwede,” puno ang sari-sari store ng pang-araw-araw na disenyo at biro ng mga Pilipino.'
   },
   sachet: {
-    title: 'Ekonomiya ng sachet',
-    photo: 'Mga basyong sachet at plastic bag sa Bohol',
+    title: 'Ekonomi\u00ADyang sachet', // soft hyphen: the long word may break on phones
+    photo: 'Mga gamit nang sachet at plastic bag sa Bohol',
     critique: true,
     lead: 'Abot-kaya ngayon, basurang plastik nang matagal pagkatapos.',
     body: 'Abot-kaya ang maliliit na pakete ngayon, pero minsan mas mura bawat yunit ang mas malaki, at nagiging basurang plastik ang bawat sachet.'
@@ -103,6 +103,7 @@ const prev = document.getElementById('story-prev');
 const next = document.getElementById('story-next');
 const greeting = document.getElementById('greeting');
 const readCount = document.getElementById('read-count');
+const finale = document.getElementById('finale');
 const tokens = new Map(
   [...document.querySelectorAll('.tokens i')].map((token) => [token.dataset.story, token])
 );
@@ -243,12 +244,31 @@ function renderRead() {
     tokens.get(id).classList.toggle('is-read', isRead);
   });
   readCount.textContent = read.size;
+  // all five read: the receipt under the store stays on show
+  if (read.size === order.length && finale.hidden && !fresh.size) finale.hidden = false;
+}
+
+// The receipt prints out under the counter the moment the fifth story is read.
+function printReceipt() {
+  finale.hidden = false;
+  if (reduceMotion.matches) return;
+  finale.querySelector('.finale-receipt').animate(
+    [{ clipPath: 'inset(0 0 100% 0)', transform: 'translateY(-24px)' }, { clipPath: 'inset(0 0 0 0)', transform: 'none' }],
+    { duration: 1100, delay: 500, easing: 'cubic-bezier(0.3, 0.7, 0.4, 1)', fill: 'backwards' }
+  );
+  setTimeout(() => {
+    const box = finale.getBoundingClientRect();
+    if (box.top > window.innerHeight * 0.75) finale.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 900);
 }
 
 function celebrate(latest) {
   if (read.size === order.length) {
     say('“Kumpleto! Balik ka ulit, ha!”');
-    if (fresh.size) play('ding', 200 + fresh.size * 90);
+    if (fresh.size) {
+      play('ding', 200 + fresh.size * 90);
+      if (finale.hidden) printReceipt();
+    }
   } else if (latest) {
     say('“' + greetings[latest] + '”');
   }
@@ -276,6 +296,8 @@ function write(story) {
   fields.lead.textContent = story.lead;
   fields.body.textContent = story.body;
   critique.hidden = !story.critique;
+  // the critique story is printed on greyer paper with a torn red seal
+  dialog.classList.toggle('is-critique', Boolean(story.critique));
 }
 
 // Every story's page gets the height of the tallest one at this screen width,
